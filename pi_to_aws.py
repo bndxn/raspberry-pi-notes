@@ -1,6 +1,6 @@
 # Takes code from here https://medium.com/comsystoreply/a-step-by-step-guide-to-predictive-analytics-on-aws-generating-sensor-data-with-a-raspberry-pi-c84cf28b1b4b
 
-pip3 install boto3
+# pip3 install boto3
 """
 humidity_sensor.py
 """
@@ -9,11 +9,13 @@ import board
 import boto3
 import datetime
 import time
+
 """Initialize the sensor. Set correct board pin
 """
 sensor = adafruit_dht.DHT11(board.D2)
 AWS_S3_BUCKET = "bucket name"
 AWS_S3_KEY_PREFIX = "/path/to/raw/sensor/data"
+
 """Initialize the AWS S3 service client. You need to set up authentication credentials for your AWS account before
 using Boto3. You can use the `aws configure` command to configure the credentials file, or manually create it (the default location is ~/.aws/credentials)
 """
@@ -65,11 +67,11 @@ def upload_data(readings: list[Reading]):
 
 if __name__ == "__main__":
     readings = list[Reading]()
-while True:
+    while True:
         reading = get_reading()
         readings.append(reading)
         if len(readings) >= 60:
-    """Approximately every minute readings are uploaded to AWS S3"""
+            """Approximately every minute readings are uploaded to AWS S3"""
             upload_data(readings)
             readings.clear()
-time.sleep(1.0)
+        time.sleep(1.0)
