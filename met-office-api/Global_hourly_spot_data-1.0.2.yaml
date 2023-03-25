@@ -1,0 +1,256 @@
+swagger: '2.0'
+info:
+  description: This API provides hourly weather forecast data for a requested coordinate defined by a latitude and longitude. The format of the data is GeoJSON.
+  version: 1.0.2
+  title: Global hourly spot data
+  contact:
+    email: enquiries@metoffice.gov.uk
+    name: Met Office
+    url: https://www.metoffice.gov.uk/about-us/contact
+  x-ibm-name: global-hourly-spot-data-apigw
+basePath: /v0
+tags:
+  - name: spotdata-hourly-api
+    description: The Spot Data Hourly API
+schemes:
+  - https
+paths:
+  /forecasts/point/hourly:
+    get:
+      tags:
+        - spotdata-hourly-api
+      summary: Find nearest forecast data that matches the request criteria
+      operationId: getHourlyForecastForPointUsingGET_1
+      produces:
+        - application/json
+      parameters:
+        - name: excludeParameterMetadata
+          in: query
+          description: If true, exclude parameter metadata in the response. If false or undefined, the parameter metadata is returned.
+          required: false
+          type: boolean
+        - name: includeLocationName
+          in: query
+          description: If true, include location name in the response. If false or undefined, no location name is returned.
+          required: false
+          type: boolean
+        - name: latitude
+          in: query
+          description: The request latitude value in range -85/+85 expressed as a decimal fraction.
+          required: true
+          type: number
+          maximum: 85
+          exclusiveMaximum: false
+          minimum: -85
+          exclusiveMinimum: false
+          format: double
+        - name: longitude
+          in: query
+          description: The request longitude value in range -180/+180 expressed as a decimal fraction.
+          required: true
+          type: number
+          maximum: 180
+          exclusiveMaximum: false
+          minimum: -180
+          exclusiveMinimum: false
+          format: double
+      responses:
+        '200':
+          description: The request was fulfilled successfully
+          schema:
+            $ref: '#/definitions/SpotForecastFeatureCollection'
+        '400':
+          description: The server could not service the request because it was malformed.
+          schema:
+            $ref: '#/definitions/VndError'
+        '404':
+          description: The server could not service the request because the requested resource did not exist
+          schema:
+            $ref: '#/definitions/VndError'
+        '405':
+          description: The server could not service the request because it does not support the requested HTTP action - only get requests are supported
+          schema:
+            $ref: '#/definitions/VndError'
+        '415':
+          description: The server could not service the request because the media type requested is not supported - this service only exposes json data
+          schema:
+            $ref: '#/definitions/VndError'
+        '500':
+          description: The server encountered an internal error or misconfiguration and was unable to complete the request - this is not a recoverable error for a user of the API
+          schema:
+            $ref: '#/definitions/VndError'
+      deprecated: false
+definitions:
+  Feature: &ref_5
+    type: object
+    required:
+      - geometry
+      - properties
+      - type
+    properties:
+      type:
+        type: string
+        example: Feature
+        description: The GeoJSON type identifier
+      geometry:
+        description: The GeoJSON representation of the feature point with a type of Point and a latitude/longitude co-ordinates array
+        type: object
+        required: &ref_1
+          - coordinates
+          - type
+        properties: &ref_2
+          coordinates:
+            type: array
+            description: The longitude, latitude and elevation values for the point
+            items:
+              type: string
+          type:
+            type: string
+            example: Point
+            description: The GeoJSON type identifier
+        title: Point
+      properties:
+        description: All properties associated with the feature
+        type: object
+        required: &ref_3
+          - modelRunDate
+          - requestPointDistance
+          - timeSeries
+        properties: &ref_4
+          name:
+            type: string
+            example: St Thomas, Devon, South West England, England, GB
+            description: The forecast location name
+          requestPointDistance:
+            type: number
+            description: The distance from the requested point in metres
+          modelRunDate:
+            type: string
+            example: 2019-01-31T12:00Z
+            description: The model run date in UTC
+          timeSeries:
+            type: array
+            description: A time step ordered list  of forecast parameters and associated values
+            items: &ref_8
+              type: object
+              required:
+                - time
+              properties:
+                time:
+                  type: string
+                  example: 2019-01-31T12:00Z
+                  description: Time of the forecast in UTC
+                data:
+                  type: object
+                  description: A map of forecast parameters and associated values
+                  additionalProperties:
+                    type: number
+              title: TimeSeries
+        title: Properties
+    title: Feature
+    description: A feature object with mandatory geometry and properties fields
+  Map«string,ParameterDetails»: &ref_6
+    type: object
+    title: Map«string,ParameterDetails»
+    additionalProperties: &ref_0
+      type: object
+      properties:
+        description:
+          type: string
+        type:
+          type: string
+        unit: &ref_9
+          type: object
+          required:
+            - label
+            - symbol
+          properties:
+            label:
+              type: string
+              example: degrees Celsius
+              description: The name of the unit
+            symbol:
+              description: The symbolic notation of the unit
+              type: object
+              properties: &ref_7
+                type:
+                  type: string
+                value:
+                  type: string
+              title: Symbol
+          title: Unit
+      title: ParameterDetails
+  ParameterDetails: *ref_0
+  Point:
+    type: object
+    required: *ref_1
+    properties: *ref_2
+    title: Point
+  Properties:
+    type: object
+    required: *ref_3
+    properties: *ref_4
+    title: Properties
+  SpotForecastFeatureCollection:
+    type: object
+    required:
+      - features
+      - parameters
+      - type
+    properties:
+      type:
+        type: string
+        example: FeatureCollection
+        description: The GeoJSON type identifier
+      features:
+        type: array
+        description: A list of feature objects
+        items: *ref_5
+      parameters:
+        type: array
+        description: Forecast parameter metadata for all possible forecast parameters in response - each forecast parameter has a nested object containing a unit of measurement, using standard unit representation as defined by UCUM - http://unitsofmeasure.org/ucum.html - and an optional parameter definition
+        items: *ref_6
+    title: SpotForecastFeatureCollection
+    description: A feature collection object, must have a member array of features
+  Symbol:
+    type: object
+    properties: *ref_7
+    title: Symbol
+  TimeSeries: *ref_8
+  Unit: *ref_9
+  VndError:
+    type: object
+    properties:
+      logref:
+        type: string
+      message:
+        type: string
+    title: VndError
+x-ibm-configuration:
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: true
+  type: rest
+  servers:
+    - url: https://api-metoffice.apiconnect.ibmcloud.com/v0
+      description: ''
+      type:
+        - production
+        - development
+security:
+  - APIClientId: []
+    APIClientSecret: []
+securityDefinitions:
+  APIClientId:
+    description: The Client ID generated when you subscribe to this product. This can be found in your subscription settings.
+    in: header
+    name: X-IBM-Client-Id
+    type: apiKey
+  APIClientSecret:
+    description: The Client Secret generated when you subscribe to this product. You can reset the Secret in you subscription settings.
+    in: header
+    name: X-IBM-Client-Secret
+    type: apiKey
+host: api-metoffice.apiconnect.ibmcloud.com
