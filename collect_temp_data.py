@@ -2,11 +2,14 @@
 
 import schedule
 import time
+import temper
+
 
 def job():
     print("I'm working...")
 
 schedule.every(0.1).seconds.do(job)
+schedule.every(0.1).seconds.do(temper)
 
 while True:
     schedule.run_pending()
