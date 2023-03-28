@@ -6,11 +6,10 @@ import time
 def job():
     print("I'm working...")
 
-schedule.every(5).seconds.do(job)
+schedule.every(0.1).seconds.do(job)
 
 while True:
     schedule.run_pending()
     time.sleep(1)
 
 
-print('Hello')
