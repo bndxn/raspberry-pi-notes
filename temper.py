@@ -457,7 +457,8 @@ class Temper(object):
 
 def main():
   temper = Temper()
-  sys.exit(temper.main())
-
+  # os._exit(temper.main())
+  exit(temper.main())
+	
 if __name__ == "__main__":
   main()
