@@ -378,7 +378,7 @@ class Temper(object):
       return '- -'
     degC = info[name]
     degF = degC * 1.8 + 32.0
-    return '%.2fC %.2fF' % (degC, degF)
+    return '%.2f' % (degC)
 
   def _add_humidity(self, name, info):
     '''Helper method to add the humidity to a string. If no sensor data is
@@ -387,7 +387,7 @@ class Temper(object):
 
     if name not in info:
       return '-'
-    return '%d%%' % int(info[name])
+    return '%.2f' % int(info[name])
 
   def print(self, results, use_json=False):
     '''Print out a list of all of the known USB sensor devices on the system.
@@ -399,19 +399,22 @@ class Temper(object):
       return
 
     for info in results:
-      s = 'Bus %03d Dev %03d %04x:%04x %s' % (info['busnum'],
-                                              info['devnum'],
-                                              info['vendorid'],
-                                              info['productid'],
-                                              info.get('firmware'))
+      s = ''
+      #s = 'Bus %03d Dev %03d %04x:%04x %s' % (info['busnum'],
+      #                                        info['devnum'],
+      #                                        info['vendorid'],
+      #                                        info['productid'],
+      #                                        info.get('firmware')) + ','
       if 'error' in info:
         s += ' Error: %s' % info['error']
       else:
-        s += ' ' + self._add_temperature('internal temperature', info)
-        s += ' ' + self._add_humidity('internal humidity', info)
-        s += ' ' + self._add_temperature('external temperature', info)
-        s += ' ' + self._add_humidity('external humidity', info)
-      print(s)
+        s += '' + self._add_temperature('internal temperature', info) + ','
+        s += '' + self._add_humidity('internal humidity', info)
+        #s += ' ' + self._add_temperature('external temperature', info) + ','
+        #s += ' ' + self._add_humidity('external humidity', info)
+      #print(s)
+      return [self._add_temperature('internal temperature', info),
+        self._add_humidity('internal humidity', info)]
 
   def main(self):
     '''An example 'main' entry point that can be used to make temper.py a
@@ -451,8 +454,9 @@ class Temper(object):
 
     # By default, output the temperature and humidity for all known sensors.
     results = self.read(args.verbose)
-    self.print(results, args.json)
-    return 0
+    return self.print(results, args.json)
+    #return 0
+
 
 
 def main():
