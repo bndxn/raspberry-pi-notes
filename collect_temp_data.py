@@ -6,9 +6,21 @@ import time
 from temper import Temper
 import numpy as np
 import pandas as pd
+import boto3
+
+
+
 
 # copied this from pi_to_aws.py, not sure what it does
 readings = list[Temper]()
+
+def upload_data(readings):
+    print('Uploading to S3')
+    s3 = boto3.resource('s3')
+    pd.DataFrame(readings).to_csv("readings_for_upload.csv")
+    s3.Bucket('pi-temperature-readings').upload_file(
+        Filename='readings_for_upload.csv', Key='test2.csv')
+    print('Upload complete')
 
 def temper():
     # Create an instance of the class
@@ -17,20 +29,23 @@ def temper():
     reading = temper.main()
     reading.append(pd.Timestamp.now())
     readings.append(reading)
-
+    print(reading, len(readings))
+    if len(readings) > 60:
+        upload_data(readings)
+        readings.clear()
+        
 schedule.every(0.1).seconds.do(temper)
 
-i = 0
-while i < 3:
-    i += 1
+while True:
     schedule.run_pending()
     time.sleep(1)
 
-print(readings)
 
-pd.DataFrame(readings).to_csv("readings.csv")
 
-# np.savetxt("readings.csv", readings, delimiter = ',', fmt='%.3e')
+
+
+
+upload_data(readings)
 
 # if __name__ == "__main__":
 #    while True:
