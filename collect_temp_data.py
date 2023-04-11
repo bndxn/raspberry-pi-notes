@@ -1,5 +1,5 @@
 # Use this to control collecting temperatures and saving them to a DB
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import schedule
 import time
