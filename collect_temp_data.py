@@ -20,7 +20,12 @@ def upload_data(readings):
     pd.DataFrame(readings).to_csv("readings_for_upload.csv")
     s3.Bucket('pi-temperature-readings').upload_file(
         Filename='readings_for_upload.csv', Key='test2.csv')
-    print('Upload complete')
+    print('Upload to S3 complete')
+    
+    s3.Bucket('bucket-swiykr').upload_file(
+	Filename='readings_for_upload.csv', Key='test2.csv')
+    print('Upload to Lightsail S3 complete')
+
 
 def temper():
     # Create an instance of the class
@@ -30,7 +35,7 @@ def temper():
     reading.append(pd.Timestamp.now())
     readings.append(reading)
     print(reading, len(readings))
-    if len(readings) > 60:
+    if len(readings) > 10:
         upload_data(readings)
         readings.clear()
         
