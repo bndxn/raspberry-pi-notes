@@ -10,7 +10,6 @@ import boto3
 
 
 
-
 # copied this from pi_to_aws.py, not sure what it does
 readings = list[Temper]()
 
@@ -22,9 +21,9 @@ def upload_data(readings):
         Filename='readings_for_upload.csv', Key='test2.csv')
     print('Upload to S3 complete')
     
-    s3.Bucket('bucket-swiykr').upload_file(
-	Filename='readings_for_upload.csv', Key='test2.csv')
-    print('Upload to Lightsail S3 complete')
+#    s3.Bucket('bucket-swiykr').upload_file(
+#	Filename='readings_for_upload.csv', Key='test2.csv')
+#    print('Upload to Lightsail S3 complete')
 
 
 def temper():
