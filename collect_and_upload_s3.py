@@ -27,7 +27,7 @@ def upload_data(readings):
 
 
 
-def temper():
+def temper_s3():
     # Create an instance of the class
     temper = Temper()
     # Call the instance objects
@@ -39,7 +39,7 @@ def temper():
         upload_data(readings)
         readings.clear()
         
-schedule.every(0.1).seconds.do(temper)
+schedule.every(0.1).seconds.do(temper_s3)
 
 while True:
     schedule.run_pending()

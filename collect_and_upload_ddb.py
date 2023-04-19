@@ -1,3 +1,6 @@
+# Use this to control collecting temperatures and saving them to a DB
+#!/usr/bin/python3
+
 
 # Source article: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_PutItem_section.html
 
@@ -83,7 +86,7 @@ def upload_data_DDB(reading):
     #upload.add_reading(datetime, temperature, humidity)
 
 
-def temper():
+def temper_ddb():
     # Create an instance of the class
     temper = Temper()
     # Call the instance objects
@@ -92,7 +95,7 @@ def temper():
     upload_data_DDB(reading)
     
         
-schedule.every(10).seconds.do(temper)
+schedule.every(10).seconds.do(temper_ddb)
 
 while True:
     schedule.run_pending()
