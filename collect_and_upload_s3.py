@@ -7,7 +7,7 @@ from temper import Temper
 import numpy as np
 import pandas as pd
 import boto3
-
+from collect_and_upload_ddb import DDBReadings, add_reading
 
 
 
@@ -25,6 +25,7 @@ def upload_data(readings):
     s3.Bucket('bucket-swiykr').upload_file(
 	Filename='readings_for_upload.csv', Key='test2.csv')
     print('Upload to Lightsail S3 complete')
+
 
 
 def temper():
