@@ -39,15 +39,10 @@ def temper_s3():
         upload_data(readings)
         readings.clear()
         
-schedule.every(0.1).seconds.do(temper_s3)
+schedule.every(2).seconds.do(temper_s3)
 
 while True:
     schedule.run_pending()
     time.sleep(1)
 
 
-
-
-# if __name__ == "__main__":
-#    while True:
-#        reading = 
