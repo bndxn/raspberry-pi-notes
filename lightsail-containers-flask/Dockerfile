@@ -1,5 +1,5 @@
 # Set base image (host OS)
-FROM python:3.8-slim-buster
+FROM python:3.9-slim-buster
 
 # By default, listen on port 5000
 EXPOSE 5000/tcp
@@ -13,11 +13,15 @@ COPY templates /app/templates/
 # Copy the dependencies file to the working directory
 COPY requirements.txt .
 
-# Install any dependencies
+# Installing native files to run numpy
+# RUN apk --no-cache add musl-dev linux-headers g++
 
-RUN pip install --upgrade pip
-RUN pip install --upgrade setuptools wheel
-RUN pip install numpy
+# Install any dependencies
+#RUN sudo apt-get install python3-pip
+RUN python -m pip install --upgrade pip
+#RUN pip install python3-pip
+#RUN pip install --upgrade pip
+#RUN pip install --upgrade setuptools wheel
 RUN pip install -r requirements.txt
 
 # Copy the content of the local src directory to the working directory
