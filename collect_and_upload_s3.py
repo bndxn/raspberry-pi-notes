@@ -7,7 +7,6 @@ from temper import Temper
 import numpy as np
 import pandas as pd
 import boto3
-from collect_and_upload_ddb import DDBReadings, add_reading
 
 
 # copied this from pi_to_aws.py, not sure what it does
