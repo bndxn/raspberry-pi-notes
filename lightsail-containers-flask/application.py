@@ -5,9 +5,9 @@ import plotly
 import plotly.express as px
 import boto3
 
-app = Flask(__name__)
+application = Flask(__name__)
 
-@app.route('/')
+@application.route('/')
 def notdash():
    df = pd.DataFrame({
       'Fruit': ['Apples', 'Oranges', 'Bananas', 'Apples', 'Oranges', 'Bananas'],
@@ -18,7 +18,7 @@ def notdash():
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
 
-@app.route('/line')
+@application.route('/line')
 def notdash_line():
    df = pd.DataFrame({
       'x': [1, 2, 3, 4, 5, 6],
@@ -28,11 +28,11 @@ def notdash_line():
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
 
-@app.route('/temp_local')
+@application.route('/temp_local')
 def notdash_temp_local():
    
    # For now, trying out local version
-   df = pd.read_csv('../local_copy_test2.csv', skiprows=0, index_col=0)
+   df = pd.read_csv('local_copy_test2.csv', skiprows=0, index_col=0)
    df.rename(columns={'0':'temp', '1':'hum', '2': 'time'},inplace=True)
 
    fig = px.line(df, x='temp', y='time')
@@ -40,25 +40,25 @@ def notdash_temp_local():
    return render_template('notdash.html', graphJSON=graphJSON)
 
 
-# @app.route('/temp_aws')
-# def notdash_temp_aws():
+@application.route('/temp_aws')
+def notdash_temp_aws():
 
 
-#    s3 = boto3.resource('s3')
+   s3 = boto3.resource('s3')
    
-#    s3.Bucket('pi-temperature-readings').download_file('test2.csv','local_copy_test3.csv')
+   s3.Bucket('pi-temperature-readings').download_file('test2.csv','local_copy_test3.csv')
    
-#    # Downloading it as no. 3 to the local directory, let's see what happens
-#    df = pd.read_csv('local_copy_test3.csv', skiprows=0, index_col=0)
-#    df.rename(columns={'0':'temp', '1':'hum', '2': 'time'},inplace=True)
+   # Downloading it as no. 3 to the local directory, let's see what happens
+   df = pd.read_csv('local_copy_test3.csv', skiprows=0, index_col=0)
+   df.rename(columns={'0':'temp', '1':'hum', '2': 'time'},inplace=True)
 
-#    fig = px.line(df, x='temp', y='time')
-#    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-#    return render_template('notdash.html', graphJSON=graphJSON)
+   fig = px.line(df, x='time', y='temp')
+   graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+   return render_template('notdash.html', graphJSON=graphJSON)
 
 
 
 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port=8080)
+   application.run(host='0.0.0.0', port=8080)
 
