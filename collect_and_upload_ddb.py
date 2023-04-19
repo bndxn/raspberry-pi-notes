@@ -81,8 +81,7 @@ def upload_data_DDB(reading):
     datetime = str(pd.Timestamp.now())
     temperature = reading[0]
     humidity = reading[1]
-    print('DDB upload: \nDatetime : %s, temperature: %s, humidity: %s'
-          % datetime, temperature, humidity)
+    print(f'DDB upload: Datetime: {datetime}, temp: {temperature}, hum: {humidity}')
     #upload.add_reading(datetime, temperature, humidity)
 
 
