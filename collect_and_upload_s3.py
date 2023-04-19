@@ -49,8 +49,6 @@ while True:
 
 
 
-
-
 upload_data(readings)
 
 # if __name__ == "__main__":
