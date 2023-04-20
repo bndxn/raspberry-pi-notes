@@ -30,7 +30,8 @@ class DDBReadings():
       """
       :param dyn_resource: A Boto3 DynamoDB resource.
       """
-      self.dyn_resource = boto3.resource('dynamodb')
+      self.session = boto3.Session(profile_name='default')
+      self.dyn_resource = self.session.boto3.resource('dynamodb', region_name='eu-west-1')
       self.table_name = 'pi-temperature-readings'
       self.table = self.dyn_resource.Table('pi-temperature-readings')
 
@@ -77,12 +78,12 @@ readings = list[Temper]()
 
 def upload_data_DDB(reading):
     print('Uploading to DDB')
-    #upload = DDBReadings()
+    upload = DDBReadings()
     datetime = str(pd.Timestamp.now())
     temperature = reading[0]
     humidity = reading[1]
     print(f'DDB upload: Datetime: {datetime}, temp: {temperature}, hum: {humidity}')
-    #upload.add_reading(datetime, temperature, humidity)
+    upload.add_reading(datetime, temperature, humidity)
 
 
 def temper_ddb():
