@@ -1,11 +1,9 @@
 # Use this to control collecting temperatures and saving them to a DB
 #!/usr/bin/python3
 
-
 # Source article: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_PutItem_section.html
 
 # Source code: https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/python/example_code/dynamodb/GettingStarted/scenario_getting_started_movies.py#L151
-
 
 import schedule
 import time
@@ -30,7 +28,12 @@ class DDBReadings():
       """
       :param dyn_resource: A Boto3 DynamoDB resource.
       """
-      self.dyn_resource = boto3.resource('dynamodb')
+      AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+      AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+      
+      # A bit confused by client, session, and resource - need to work out the order!
+      ddb = boto3.session(aws_access_key_id = AWS_ACCESS_KEY_ID, aws_secret_access_key= AWS_SECRET_ACCESS_KEY)
+      self.dyn_resource = boto3.resource('dynamodb', region_name='eu-west-1')
       self.table_name = 'pi-temperature-readings'
       self.table = self.dyn_resource.Table('pi-temperature-readings')
 
@@ -77,12 +80,12 @@ readings = list[Temper]()
 
 def upload_data_DDB(reading):
     print('Uploading to DDB')
-    #upload = DDBReadings()
+    upload = DDBReadings()
     datetime = str(pd.Timestamp.now())
     temperature = reading[0]
     humidity = reading[1]
     print(f'DDB upload: Datetime: {datetime}, temp: {temperature}, hum: {humidity}')
-    #upload.add_reading(datetime, temperature, humidity)
+    upload.add_reading(datetime, temperature, humidity)
 
 
 def temper_ddb():
