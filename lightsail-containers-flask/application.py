@@ -8,41 +8,24 @@ import boto3
 application = Flask(__name__)
 
 @application.route('/')
-def notdash():
-   df = pd.DataFrame({
-      'Fruit': ['Apples', 'Oranges', 'Bananas', 'Apples', 'Oranges', 'Bananas'],
-      'Amount': [4, 1, 2, 2, 4, 5],
-      'City': ['SF', 'SF', 'SF', 'Montreal', 'Montreal', 'Montreal']
-   })
-   fig = px.bar(df, x='Fruit', y='Amount', color='City',    barmode='group')
-   graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-   return render_template('notdash.html', graphJSON=graphJSON)
+def index():
+   return render_template('index.html')
 
-@application.route('/line')
-def notdash_line():
-   df = pd.DataFrame({
-      'x': [1, 2, 3, 4, 5, 6],
-      'y': [1, 4, 9, 16, 25, 36]
-   })
-   fig = px.line(df, x='x', y='y')
-   graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-   return render_template('notdash.html', graphJSON=graphJSON)
 
 @application.route('/temp_local')
-def notdash_temp_local():
+def temp_local():
    
    # For now, trying out local version
    df = pd.read_csv('local_copy_test2.csv', skiprows=0, index_col=0)
    df.rename(columns={'0':'temp', '1':'hum', '2': 'time'},inplace=True)
 
-   fig = px.line(df, x='temp', y='time')
+   fig = px.line(df, x='time', y='temp')
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
 
 
 @application.route('/temp_aws')
-def notdash_temp_aws():
-
+def temp_aws():
 
    s3 = boto3.resource('s3')
    
