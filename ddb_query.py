@@ -60,14 +60,26 @@ class DynamoResource():
     print(df)
 
 
-  def query_data_by_temp(self):
-    print('Querying DDB for temp')
-    
-    response = dynamoresource.table.query(KeyConditionExpression=Key('temperature').gt(18))
+def query_data_by_temp(self):
 
-    items = response['Items']
-    for item in items:
-     print(item)
+
+  # Define the scan parameters
+  scan_params = {
+      'FilterExpression': '#temp > :temp_val',
+      'ExpressionAttributeNames': {'#temp': 'temperature'},
+      'ExpressionAttributeValues': {':temp_val': {'N': '18'}}
+  }
+
+  # Scan the table with the defined parameters
+  response = dynamoresource.scan(**scan_params)
+
+  # Print the items where the temperature is above 18
+  for item in response['Items']:
+      print(item)
+
+
+
+
 
 if __name__ == '__main__':
    dynamoresource = DynamoResource()
