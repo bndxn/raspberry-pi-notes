@@ -34,6 +34,7 @@ class DDBReadings():
       """
       :param dyn_resource: A Boto3 DynamoDB resource.
       """
+
       AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
       AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
       REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
@@ -101,9 +102,8 @@ def temper_ddb():
     upload_data_DDB(reading)
 
 if __name__ == '__main__':
-   temper_ddb()
-#  schedule.every(2).seconds.do(temper_ddb)
+  schedule.every(2).seconds.do(temper_ddb)
 
-#while True:
-#      schedule.run_pending()
-#      time.sleep(1)
+  while True:
+      schedule.run_pending()
+      time.sleep(1)
