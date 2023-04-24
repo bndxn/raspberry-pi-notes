@@ -75,12 +75,13 @@ class DDBReadings():
     
     def get_readings_alt(self, timestamp_range):
        
-      key_condition_expression = 'timestamp BETWEEN :min_value AND :max_value'
+      key_condition_expression = '#ts BETWEEN :min_value AND :max_value'
       expression_attribute_values = {':min_value': {'N': str(timestamp_range[0])},':max_value': {'N': str(timestamp_range[1])}}
+      expression_attribute_names = {'#ts':'timestamp'}
 
       # Execute the query
       response = self.table.query(KeyConditionExpression=key_condition_expression,
-      ExpressionAttributeValues=expression_attribute_values)
+      ExpressionAttributeValues=expression_attribute_values, ExpressionAttributeNames=expression_attribute_names)
 
       items = response['Items']
       for item in items:
