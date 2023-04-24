@@ -3,7 +3,7 @@
 
 # Source code; https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.Query.html
 import schedule
-Yimport time
+import time
 from decimal import Decimal
 from io import BytesIO
 import json
@@ -25,7 +25,6 @@ AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
 
-#print(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
 
 class DDBReadings():
   
@@ -124,27 +123,45 @@ def query_data_DDB():
     # Convert the start and end dates to strings in ISO format
     start_date_str = start_date.strftime('%Y-%m-%d %H:%M:%S')
     end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
+ 
+    start_date_str = str(pd.Timestamp.now() - pd.Timedelta(days=1))
+    end_date_str = str(pd.Timestamp.now())
+
 
     key_condition_expression = '#ts BETWEEN :min_value AND :max_value'
     expression_attribute_values = {':min_value': {'S': start_date_str},':max_value': {'S': end_date_str}}
     expression_attribute_names = {'#ts':'timestamp'}
 
     # Execute the query
-    response = DDBReading.table.query(
-       KeyConditionExpression=key_condition_expression, 
-       ExpressionAttributeValues=expression_attribute_values,
-       ExpressionAttributeNames=expression_attribute_names
-       )
+#    response = DDBReading.table.query(
+#       KeyConditionExpression=key_condition_expression, 
+#       ExpressionAttributeValues=expression_attribute_values,
+#       ExpressionAttributeNames=expression_attribute_names
+#       )
+
+    items = response['Items']
+    df = pd.DataFrame(items)
+    df['timestamp'] = pd.to_datetime(df['timestamp'].str['S'])
+    print(df)
+
+
+def query_data_by_temp():
+    print('Querying DDB by temp')
+    DDBReading = DDBReadings()
+    
+    filter_expression = 'CAST(temperature AS NUMBER) > :temperature_value'
+    expression_attribute_values = {':temperature_value': {'N':'18'}
+
+    response = DDBReading.table.scan(FilterExpression=filter_expression, ExpressionAttributeValues=expression_attribute_values)
 
     items = response['Items']
     for item in items:
-          print(item)
-
+     print(item)
 
 if __name__ == '__main__':
-   query_data_DDB()
+   query_data_by_temp()
 #  schedule.every(2).seconds.do(temper_ddb)
 
-#while True:
+#while True:p
 #      schedule.run_pending()
 #      time.sleep(1)
