@@ -1,0 +1,9 @@
+#!/usr/bin/python3
+import os
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
+
+print(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
+

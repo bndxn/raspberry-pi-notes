@@ -1,10 +1,7 @@
-# Use this to control collecting temperatures and saving them to a DB
+# Use this to query temperatures
 #!/usr/bin/python3
 
-# Source article: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_PutItem_section.html
-
-# Source code: https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/python/example_code/dynamodb/GettingStarted/scenario_getting_started_movies.py#L151
-
+# Source code; https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.Query.html
 import schedule
 import time
 from decimal import Decimal
@@ -34,10 +31,6 @@ class DDBReadings():
       """
       :param dyn_resource: A Boto3 DynamoDB resource.
       """
-#      AWS_ACCESS_KEY_ID = 'AKIAZ7HLX4QOG4NAS2GS'
-#      AWS_SECRET_ACCESS_KEY = '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'
-#      REGION = 'us-east-1'
-
       AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
       AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
       REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
@@ -68,19 +61,31 @@ class DDBReadings():
     # Scanning for readings: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_Scan_section.html
     # Another source, simpler code: https://docs.aws.amazon.com/code-library/latest/ug/python_3_dynamodb_code_examples.html
 
-    def get_readings(self, time_range):
+    def get_readings(self, timestamp_range):
       """
       When finished this function should be able to query the DDB table
 
       """
-
       try:
-        response = self.table.query(KeyConditionExpression=Key('year').eq(year))
+        response = self.table.query(
+		KeyConditionExpression=
+			Key('timestamp').between(timestamp_range[0], timestamp_range[1]))
       except ClientError as err:
         print(f'Error: {err}')       
       else:
           return response['Items']
-        
+    
+    def get_readings_alt(self, timestamp_range):
+     key_condition_expression = 'timestamp BETWEEN :min_value AND :max_value'
+     expression_attribute_values = {':min_value': {'N': str(timestamp_range[0])},':max_value': {'N': str(timestamp_range[1])}}
+
+        # Execute the query
+     response = self.table.query(KeyConditionExpression=key_condition_expression,
+		ExpressionAttributeValues=expression_attribute_values)
+
+     items = response['Items']
+     for item in items:
+       		print(item)
 
 
 readings = list[Temper]()
@@ -101,12 +106,23 @@ def temper_ddb():
     temper = Temper()
     # Call the instance objects
     reading = temper.main()
-    # Do the upload
+    # Do the 
     upload_data_DDB(reading)
 
-if __name__ == '__main__':
-  schedule.every(2).seconds.do(temper_ddb)
 
-  while True:
-      schedule.run_pending()
-      time.sleep(1)
+
+def query_data_DDB():
+    print('Querying DDB')
+    query = DDBReadings() # Creating this object to get the connection, should rename it
+    now =  str(pd.Timestamp.now())
+    day_ago =  str(pd.Timestamp.now() - pd.Timedelta(days=1))
+    timestamp_range = [day_ago, now]    
+    query.get_readings_alt(timestamp_range)
+
+if __name__ == '__main__':
+   query_data_DDB()
+#  schedule.every(2).seconds.do(temper_ddb)
+
+#while True:
+#      schedule.run_pending()
+#      time.sleep(1)
