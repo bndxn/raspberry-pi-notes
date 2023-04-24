@@ -1,32 +1,11 @@
 # Use this to control collecting temperatures and saving them to a DB
 #!/usr/bin/python3
 
-# Source article: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_PutItem_section.html
-
-# Source code: https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/python/example_code/dynamodb/GettingStarted/scenario_getting_started_movies.py#L151
-
-import schedule
-import time
-from decimal import Decimal
-from io import BytesIO
-import json
-import logging
 import os
-from pprint import pprint
-import requests
-from zipfile import ZipFile
 import boto3
-from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 from temper import Temper
 import pandas as pd
-
-
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
-
-#print(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
 
 class DDBReadings():
   
@@ -34,10 +13,6 @@ class DDBReadings():
       """
       :param dyn_resource: A Boto3 DynamoDB resource.
       """
-#      AWS_ACCESS_KEY_ID = 'AKIAZ7HLX4QOG4NAS2GS'
-#      AWS_SECRET_ACCESS_KEY = '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'
-#      REGION = 'us-east-1'
-
       AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
       AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
       REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
@@ -61,26 +36,7 @@ class DDBReadings():
             'humidity': humidity})
       except ClientError as err:
         print(err)
-        # logger.error(
-        #   "Couldn't add reading at % to table. Here's why: %s: %s",
-        #   err.response['Error']['Code'], err.response['Error']['Message'])
-     
-    # Scanning for readings: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_Scan_section.html
-    # Another source, simpler code: https://docs.aws.amazon.com/code-library/latest/ug/python_3_dynamodb_code_examples.html
 
-    def get_readings(self, time_range):
-      """
-      When finished this function should be able to query the DDB table
-
-      """
-
-      try:
-        response = self.table.query(KeyConditionExpression=Key('year').eq(year))
-      except ClientError as err:
-        print(f'Error: {err}')       
-      else:
-          return response['Items']
-        
 
 
 readings = list[Temper]()
@@ -105,8 +61,5 @@ def temper_ddb():
     upload_data_DDB(reading)
 
 if __name__ == '__main__':
-  schedule.every(2).seconds.do(temper_ddb)
+   temper_ddb()
 
-  while True:
-      schedule.run_pending()
-      time.sleep(1)
