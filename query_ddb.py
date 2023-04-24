@@ -67,25 +67,24 @@ class DDBReadings():
 
       """
       try:
-        response = self.table.query(
-		KeyConditionExpression=
-			Key('timestamp').between(timestamp_range[0], timestamp_range[1]))
+        response = self.table.query(KeyConditionExpression=Key('timestamp').between(timestamp_range[0], timestamp_range[1]))
       except ClientError as err:
         print(f'Error: {err}')       
       else:
           return response['Items']
     
     def get_readings_alt(self, timestamp_range):
-     key_condition_expression = 'timestamp BETWEEN :min_value AND :max_value'
-     expression_attribute_values = {':min_value': {'N': str(timestamp_range[0])},':max_value': {'N': str(timestamp_range[1])}}
+       
+      key_condition_expression = 'timestamp BETWEEN :min_value AND :max_value'
+      expression_attribute_values = {':min_value': {'N': str(timestamp_range[0])},':max_value': {'N': str(timestamp_range[1])}}
 
-        # Execute the query
-     response = self.table.query(KeyConditionExpression=key_condition_expression,
-		ExpressionAttributeValues=expression_attribute_values)
+      # Execute the query
+      response = self.table.query(KeyConditionExpression=key_condition_expression,
+      ExpressionAttributeValues=expression_attribute_values)
 
-     items = response['Items']
-     for item in items:
-       		print(item)
+      items = response['Items']
+      for item in items:
+            print(item)
 
 
 readings = list[Temper]()
