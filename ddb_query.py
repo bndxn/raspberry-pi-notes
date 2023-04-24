@@ -60,7 +60,7 @@ class DynamoResource():
     print(df)
 
 
-def query_data_by_temp(self):
+def query_data_by_temp(dynamoresource):
 
 
   # Define the scan parameters
@@ -83,6 +83,6 @@ def query_data_by_temp(self):
 
 if __name__ == '__main__':
    dynamoresource = DynamoResource()
-   dynamoresource.query_data_by_temp()
+   query_data_by_temp(dynamoresource)
    print('Done')
 
