@@ -24,7 +24,8 @@ class DynamoResource():
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
 
-    dyn_resource = boto3.resource('dynamodb', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name='us-east-1')
+    dyn_resource = boto3.resource('dynamodb', 
+                                  aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=REGION_NAME)
     self.table = dyn_resource.Table('pi-temperature-readings')
 
 
@@ -62,10 +63,7 @@ class DynamoResource():
   def query_data_by_temp(self):
     print('Querying DDB for temp')
     
-    filter_expression = 'temperature > :temperature_value'
-    expression_attribute_values = {':temperature_value': {'N':'18'}}
-
-    response = dynamoresource.table.scan(FilterExpression=filter_expression, ExpressionAttributeValues=expression_attribute_values)
+    response = dynamoresource.table.query(KeyConditionExpression=Key('temperature').gt(18))
 
     items = response['Items']
     for item in items:
@@ -73,10 +71,6 @@ class DynamoResource():
 
 if __name__ == '__main__':
    dynamoresource = DynamoResource()
-   try:
-     dynamoresource.query_data_by_temp()
-   except:
-     dynamoresource.query_time_range()
-   finally:
-     print('Done')
+   dynamoresource.query_data_by_temp()
+   print('Done')
 
