@@ -150,7 +150,7 @@ def query_data_by_temp():
     DDBReading = DDBReadings()
     
     filter_expression = 'CAST(temperature AS NUMBER) > :temperature_value'
-    expression_attribute_values = {':temperature_value': {'N':'18'}
+    expression_attribute_values = {':temperature_value': {'N':'18'}}
 
     response = DDBReading.table.scan(FilterExpression=filter_expression, ExpressionAttributeValues=expression_attribute_values)
 
