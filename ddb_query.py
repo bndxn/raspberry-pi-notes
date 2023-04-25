@@ -78,17 +78,17 @@ class DynamoResource():
       }
 
       # Scan the table with the defined parameters, references the instance of the class
-      response = self.dynamodb.scan(**scan_params)
+      # response = self.dynamodb.scan(**scan_params)
       response_ts = self.dynamodb.scan(**scan_params_ts)
 
       # Print the items where the temperature is above 18
-      print('Temp response:')
-      for item in response['Items']:
-        print(item)
+      #print('Temp response:')
+      #for item in response['Items']:
+      #  print(item)
 
       print('Timestamp response:')
-      for item in response_ts['Items']:
-        print(item)
+      df = pd.DataFrame(response_ts['Items'])
+      print(df)
 
 
 if __name__ == '__main__':
