@@ -22,7 +22,7 @@ class DynamoResource():
     # dyn_resource = boto3.resource('dynamodb', 
     #                               aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=REGION_NAME)
     # self.table = dyn_resource.Table('pi-temperature-readings')
-    self.dynamodb = boto3.client('dynamodb', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY region_name=REGION_NAME)
+    self.dynamodb = boto3.client('dynamodb', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=REGION_NAME)
 
 
   def query_time_range(self):
@@ -92,7 +92,7 @@ class DynamoResource():
 
 
 if __name__ == '__main__':
-   #dynamoresource = DynamoResource()
-   query_data_by_temp()
+   dynamoresource = DynamoResource()
+   dynamoresource.query_data_by_temp()
    print('Done')
 
