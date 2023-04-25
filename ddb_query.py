@@ -60,25 +60,28 @@ class DynamoResource():
     print(df)
 
 
-def query_data_by_temp(dynamoresource):
+  def query_data_by_temp():
+    # Create a DynamoDB client
+    dynamodb = boto3.client('dynamodb', 
+      aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=REGION_NAME)
 
+    # Define the table name
+    table_name = 'pi-temperature-readings'
 
-  # Define the scan parameters
-  scan_params = {
-      'FilterExpression': '#temp > :temp_val',
-      'ExpressionAttributeNames': {'#temp': 'temperature'},
-      'ExpressionAttributeValues': {':temp_val': {'N': '18'}}
-  }
+    # Define the scan parameters
+    scan_params = {
+        'TableName': table_name,
+        'FilterExpression': '#temp > :temp_val',
+        'ExpressionAttributeNames': {'#temp': 'temperature'},
+        'ExpressionAttributeValues': {':temp_val': {'N': '18'}}
+    }
 
-  # Scan the table with the defined parameters
-  response = dynamoresource.scan(**scan_params)
+    # Scan the table with the defined parameters
+    response = dynamodb.scan(**scan_params)
 
-  # Print the items where the temperature is above 18
-  for item in response['Items']:
-      print(item)
-
-
-
+    # Print the items where the temperature is above 18
+    for item in response['Items']:
+        print(item)
 
 
 if __name__ == '__main__':
