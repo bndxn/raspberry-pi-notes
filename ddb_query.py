@@ -9,11 +9,6 @@ from botocore.exceptions import ClientError
 import pandas as pd
 from datetime import datetime, timedelta
 
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
-
-
 class DynamoResource():
   
   def __init__(self):
@@ -24,9 +19,10 @@ class DynamoResource():
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
 
-    dyn_resource = boto3.resource('dynamodb', 
-                                  aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=REGION_NAME)
-    self.table = dyn_resource.Table('pi-temperature-readings')
+    # dyn_resource = boto3.resource('dynamodb', 
+    #                               aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=REGION_NAME)
+    # self.table = dyn_resource.Table('pi-temperature-readings')
+    self.dynamodb = boto3.client('dynamodb', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY region_name=REGION_NAME)
 
 
   def query_time_range(self):
@@ -60,27 +56,39 @@ class DynamoResource():
     print(df)
 
 
-def query_data_by_temp():
-    # Create a DynamoDB client
-    dynamodb = boto3.client('dynamodb',aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=REGION_NAME)
+  def query_data_by_temp(self):
+      # Define the table name
+      table_name = 'pi-temperature-readings'
 
-    # Define the table name
-    table_name = 'pi-temperature-readings'
+      # Define the scan parameters
+      scan_params = {
+          'TableName': table_name,
+          'FilterExpression': '#temp > :temp_val',
+          'ExpressionAttributeNames': {'#temp': 'temperature'},
+          'ExpressionAttributeValues': {':temp_val': {'S': '18'}}
+      }
 
-    # Define the scan parameters
-    scan_params = {
-        'TableName': table_name,
-        'FilterExpression': '#temp > :temp_val',
-        'ExpressionAttributeNames': {'#temp': 'temperature'},
-        'ExpressionAttributeValues': {':temp_val': {'S': '18'}}
-    }
+      day_ago = str(pd.Timestamp.now() - pd.Timedelta(days=1))
 
-    # Scan the table with the defined parameters
-    response = dynamodb.scan(**scan_params)
+      scan_params_ts = {
+          'TableName': table_name,
+          'FilterExpression': '#ts > :day_ago',
+          'ExpressionAttributeNames': {'#ts': 'timestamp'},
+          'ExpressionAttributeValues': {':day_ago': {'S': day_ago}}
+      }
 
-    # Print the items where the temperature is above 18
-    for item in response['Items']:
-     print(item)
+      # Scan the table with the defined parameters, references the instance of the class
+      response = self.dynamodb.scan(**scan_params)
+      response_ts = self.dynamodb.scan(**scan_params_ts)
+
+      # Print the items where the temperature is above 18
+      print('Temp response:')
+      for item in response['Items']:
+        print(item)
+
+      print('Timestamp response:')
+      for item in response_ts['Items']:
+        print(item)
 
 
 if __name__ == '__main__':
