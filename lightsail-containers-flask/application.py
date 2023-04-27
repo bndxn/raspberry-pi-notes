@@ -24,8 +24,8 @@ def temp_local():
    return render_template('notdash.html', graphJSON=graphJSON)
 
 
-@application.route('/temp_aws')
-def temp_aws():
+@application.route('/temp_s3')
+def temp_s3():
 
    s3 = boto3.resource('s3')
    
@@ -40,7 +40,30 @@ def temp_aws():
    return render_template('notdash.html', graphJSON=graphJSON)
 
 
+@application.route('/temp_ddb')
+def temp_ddb():
 
+   client = boto3.client('dynamodb')
+   
+   table_name = 'pi-temperature-readings'
+
+   day_ago = str(pd.Timestamp.now() - pd.Timedelta(days=1))
+
+   scan_params = {
+         'TableName': table_name,
+         'FilterExpression': '#ts > :day_ago',
+         'ExpressionAttributeNames': {'#ts': 'timestamp'},
+         'ExpressionAttributeValues': {':day_ago': {'S': day_ago}}
+   }
+
+   response_ts = client.scan(**scan_params)
+
+   print('Timestamp response: json_normalise')
+   df = pd.json_normalize(response_ts['Items'])
+
+   fig = px.line(df, x='timestamp.S', y='temperature.S')
+   graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+   return render_template('notdash.html', graphJSON=graphJSON)
 
 if __name__ == "__main__":
    application.run(host='0.0.0.0', port=8080)

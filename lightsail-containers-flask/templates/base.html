@@ -23,10 +23,10 @@
             <a class="nav-link" href="{{url_for('index')}}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('temp_local')}}">Local_temp</a>
+            <a class="nav-link" href="{{url_for('temp_local')}}">Temp (stored locally)</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link 3</a>
+            <a class="nav-link" href="{{url_for('temp_s3')}}">Temp (via S3)</a>
           </li>
         </ul>
       </div>
