@@ -60,8 +60,12 @@ def temp_ddb():
 
    print('Timestamp response: json_normalise')
    df = pd.json_normalize(response_ts['Items'])
-
-   fig = px.scatter(df, x='timestamp.S', y='temperature.S')
+   df.sort_values(by='timestamp.S',inplace=True)
+   
+   # Not sure why this makes these graphs match the notebook ones
+   df.to_csv('test.csv')
+   df2 = pd.read_csv('test.csv')
+   fig = px.scatter(df2, x='timestamp.S', y='temperature.S')
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
 

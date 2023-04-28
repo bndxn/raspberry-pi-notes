@@ -42,6 +42,8 @@ class DynamoResource():
 
       print('Timestamp response: json_normalise')
       df = pd.json_normalize(response_ts['Items'])
+      df.sort_values(by='timestamp.S',inplace=True)
+      df.to_csv('ddb_output.csv')
       print(df)
 
 
