@@ -61,7 +61,7 @@ def temp_ddb():
    print('Timestamp response: json_normalise')
    df = pd.json_normalize(response_ts['Items'])
 
-   fig = px.line(df, x='timestamp.S', y='temperature.S')
+   fig = px.scatter(df, x='timestamp.S', y='temperature.S')
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
 
