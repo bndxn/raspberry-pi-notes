@@ -43,7 +43,7 @@ def temp_s3():
 @application.route('/temp_ddb')
 def temp_ddb():
 
-   client = boto3.client('dynamodb')
+   client = boto3.client('dynamodb', region_name='us-east-1')
    
    table_name = 'pi-temperature-readings'
 
