@@ -387,7 +387,7 @@ class Temper(object):
 
     if name not in info:
       return '-'
-    return '%.2f' % int(info[name])
+    return '%.2f' % (info[name])
 
   def print(self, results, use_json=False):
     '''Print out a list of all of the known USB sensor devices on the system.
