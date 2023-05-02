@@ -1,9 +1,13 @@
 from flask import Flask, render_template
 import pandas as pd
+import plotly.graph_objs as go
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import json
 import plotly
 import plotly.express as px
 import boto3
+import numpy as np
 
 application = Flask(__name__)
 
@@ -19,23 +23,37 @@ def temp_local():
    df = pd.read_csv('local_copy_test2.csv', skiprows=0, index_col=0)
    df.rename(columns={'0':'temp', '1':'hum', '2': 'time'},inplace=True)
 
-   fig = px.line(df, x='time', y='temp')
-   graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-   return render_template('notdash.html', graphJSON=graphJSON)
+   fig = make_subplots(specs=[[{"secondary_y": True}]])
 
+   fig.add_trace(
+    go.Scatter(x=df['time'],y=df['temp'], name="Temperature", mode='markers'),
+    secondary_y=False,
+   )
 
-@application.route('/temp_s3')
-def temp_s3():
+   fig.add_trace(
+    go.Scatter(x=df['time'],y=df['hum'], name="Humidity", mode='markers'),
+    secondary_y=True,
+   )
 
-   s3 = boto3.resource('s3')
-   
-   s3.Bucket('pi-temperature-readings').download_file('test2.csv','local_copy_test3.csv')
-   
-   # Downloading it as no. 3 to the local directory, let's see what happens
-   df = pd.read_csv('local_copy_test3.csv', skiprows=0, index_col=0)
-   df.rename(columns={'0':'temp', '1':'hum', '2': 'time'},inplace=True)
+   fig.update_layout(
+    title_text="Temperature and humidity over time"
+   )
 
-   fig = px.line(df, x='time', y='temp')
+   fig.update_layout(
+    autosize=False,
+     yaxis = dict(
+         tickmode = 'array',
+         tickvals = np.arange(0,50,0.5)),
+     yaxis_tickformat=' ',
+    )
+
+   # Set x-axis title
+   fig.update_xaxes(title_text="Time")
+
+   # Set y-axes titles
+   fig.update_yaxes(title_text="<b>Temperature</b>", title_font_color='blue', secondary_y=False)
+   fig.update_yaxes(title_text="<b>Humidity</b>", title_font_color='red', secondary_y=True)
+
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
 
@@ -65,9 +83,42 @@ def temp_ddb():
    # Not sure why this makes these graphs match the notebook ones
    df.to_csv('test.csv')
    df2 = pd.read_csv('test.csv')
-   fig = px.scatter(df2, x='timestamp.S', y='temperature.S')
+
+
+   df = df2.rename(columns={'timestamp.S':'time', 'temperature.S':'temp',
+                       'humidity.S':'hum'})
+
+   
+   fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+   fig.add_trace(
+    go.Scatter(x=df['time'],y=df['temp'], name="Temperature", mode='markers'),
+    secondary_y=False,
+   )
+
+   fig.add_trace(
+    go.Scatter(x=df['time'],y=df['hum'], name="Humidity", mode='markers'),
+    secondary_y=True,
+   )
+
+   fig.update_layout(
+    title_text="Temperature and humidity over time"
+   )
+
+   fig.update_layout(
+    autosize=False
+    )
+
+   # Set x-axis title
+   fig.update_xaxes(title_text="Time")
+
+   # Set y-axes titles
+   fig.update_yaxes(title_text="<b>Temperature</b>", title_font_color='blue', secondary_y=False)
+   fig.update_yaxes(title_text="<b>Humidity</b>", title_font_color='red', secondary_y=True)
+
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
+
 
 if __name__ == "__main__":
    application.run(host='0.0.0.0', port=8080)

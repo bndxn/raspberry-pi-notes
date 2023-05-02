@@ -26,9 +26,6 @@
             <a class="nav-link" href="{{url_for('temp_local')}}">Temp (stored locally)</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('temp_s3')}}">Temp (via S3)</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="{{url_for('temp_ddb')}}">Temp (via DDB)</a>
           </li>
         </ul>
@@ -43,7 +40,22 @@
         </div>
       </div>
     </div>
+
+
+    <footer class="fixed-bottom mt-4 mb-4">
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-12 text-center">
+            <p class="text-muted">Made with love, using</p>
+            <img src="{{ url_for('static', filename='images/raspi_logo.png') }}" alt="Image" width="120" style="opacity: 0.5;">
+          </div>
+        </div>
+      </div>
+    </footer>    
     
+    
+    
+
 
 
 
