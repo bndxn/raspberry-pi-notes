@@ -29,7 +29,7 @@ class DynamoResource():
       # Define the table name
       table_name = 'pi-temperature-readings'
 
-      day_ago = str(pd.Timestamp.now() - pd.Timedelta(days=1))
+      day_ago = str(pd.Timestamp.now() - pd.Timedelta(weeks=20))
 
       scan_params = {
           'TableName': table_name,
@@ -43,7 +43,7 @@ class DynamoResource():
       print('Timestamp response: json_normalise')
       df = pd.json_normalize(response_ts['Items'])
       df.sort_values(by='timestamp.S',inplace=True)
-      df.to_csv('ddb_output.csv')
+      df.to_csv('analysis/ddb_output.csv')
       print(df)
 
 
