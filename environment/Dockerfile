@@ -20,11 +20,6 @@ COPY requirements.txt .
 # RUN apk --no-cache add musl-dev linux-headers g++
 
 # Install any dependencies
-#RUN sudo apt-get install python3-pip
-# RUN python -m pip install --upgrade pip
-#RUN pip install python3-pip
-#RUN pip install --upgrade pip
-#RUN pip install --upgrade setuptools wheel
 RUN pip install -r requirements.txt
 
 # Copy the content of the local src directory to the working directory
