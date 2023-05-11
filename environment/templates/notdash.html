@@ -4,7 +4,7 @@
 
 <h2>{% block title %} Temperature {% endblock %}</h2>
 
-  <div id='chart' class='chart'></div>
+  <div id='chart' class='chart' style="height: 5000px; width: 800px;"></div>
   <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
   <script type='text/javascript'>
     var graphs = {{graphJSON | safe}};

@@ -58,8 +58,8 @@ def temp_local():
    return render_template('notdash.html', graphJSON=graphJSON)
 
 
-@application.route('/temp_ddb')
-def temp_ddb():
+@application.route('/last_day')
+def last_day():
 
    client = boto3.client('dynamodb', region_name='us-east-1')
    
@@ -76,7 +76,6 @@ def temp_ddb():
 
    response_ts = client.scan(**scan_params)
 
-   print('Timestamp response: json_normalise')
    df = pd.json_normalize(response_ts['Items'])
    df.sort_values(by='timestamp.S',inplace=True)
    
@@ -115,6 +114,47 @@ def temp_ddb():
    # Set y-axes titles
    fig.update_yaxes(title_text="<b>Temperature</b>", title_font_color='blue', secondary_y=False)
    fig.update_yaxes(title_text="<b>Humidity</b>", title_font_color='red', secondary_y=True)
+
+   graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+   return render_template('notdash.html', graphJSON=graphJSON)
+
+
+@application.route('/last_week')
+def last_week():
+   return render_template('index.html')
+
+
+
+@application.route('/all_time')
+def all_time():
+
+   client = boto3.client('dynamodb', region_name='us-east-1')
+   
+   table_name = 'pi-temperature-readings'
+
+   # First recordings on the pi were from 2023-04-21
+   start_date = str(pd.Timestamp('2023-04-21'))
+
+   scan_params = {
+         'TableName': table_name,
+         'FilterExpression': '#ts > :start_date',
+         'ExpressionAttributeNames': {'#ts': 'timestamp'},
+         'ExpressionAttributeValues': {':day_ago': {'S': start_date}}
+   }
+
+   response_ts = client.scan(**scan_params)
+
+   df = pd.json_normalize(response_ts['Items'])
+   df.sort_values(by='timestamp.S',inplace=True)
+
+   df.rename(columns={'humidity.S': 'humidity',
+                   'temperature.S':'temp',
+                   'timestamp.S':'timestamp'},inplace=True)
+   df.drop(columns=['Unnamed: 0'],inplace=True)
+
+   fig = px.scatter(df, x="timestamp", y=["humidity","temp"], 
+                    title='All-time humidity and temperature in the grove!')
+   fig.show()
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
