@@ -80,12 +80,13 @@ def last_day():
    df.sort_values(by='timestamp.S',inplace=True)
    
    # Not sure why this makes these graphs match the notebook ones
-   df.to_csv('test.csv')
-   df2 = pd.read_csv('test.csv')
+   df.to_csv('last_day.csv')
+   del df
+   df = pd.read_csv('last_day.csv')
 
 
-   df = df2.rename(columns={'timestamp.S':'time', 'temperature.S':'temp',
-                       'humidity.S':'hum'})
+   df.rename(columns={'timestamp.S':'time', 'temperature.S':'temp',
+                       'humidity.S':'hum'},inplace=True)
 
    
    fig = make_subplots(specs=[[{"secondary_y": True}]])
@@ -139,7 +140,7 @@ def all_time():
          'TableName': table_name,
          'FilterExpression': '#ts > :start_date',
          'ExpressionAttributeNames': {'#ts': 'timestamp'},
-         'ExpressionAttributeValues': {':day_ago': {'S': start_date}}
+         'ExpressionAttributeValues': {':start_date': {'S': start_date}}
    }
 
    response_ts = client.scan(**scan_params)
@@ -147,10 +148,13 @@ def all_time():
    df = pd.json_normalize(response_ts['Items'])
    df.sort_values(by='timestamp.S',inplace=True)
 
+   df.to_csv('all_time.csv')
+   del df
+   df = pd.read_csv('all_time.csv')
+
    df.rename(columns={'humidity.S': 'humidity',
                    'temperature.S':'temp',
                    'timestamp.S':'timestamp'},inplace=True)
-   df.drop(columns=['Unnamed: 0'],inplace=True)
 
    fig = px.scatter(df, x="timestamp", y=["humidity","temp"], 
                     title='All-time humidity and temperature in the grove!')

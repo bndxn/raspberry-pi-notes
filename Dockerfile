@@ -9,6 +9,7 @@ WORKDIR /app
 
 # Copy the templates into the app
 COPY templates /app/templates/
+COPY static /app/static/
 
 # Copy the local readings to the working directory
 COPY local_copy_test2.csv .
