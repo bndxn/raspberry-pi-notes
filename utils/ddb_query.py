@@ -25,7 +25,7 @@ class DynamoResource():
     
     self.dynamodb = boto3.client('dynamodb', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=REGION_NAME)
 
-  def query_last_day_of_readings(self):
+  def query_all_time(self):
       # Define the table name
       table_name = 'pi-temperature-readings'
 
@@ -43,12 +43,12 @@ class DynamoResource():
       print('Timestamp response: json_normalise')
       df = pd.json_normalize(response_ts['Items'])
       df.sort_values(by='timestamp.S',inplace=True)
-      df.to_csv('analysis/ddb_output.csv')
+      df.to_csv('../analysis/ddb_output.csv')
       print(df)
 
 
 if __name__ == '__main__':
    dynamoresource = DynamoResource()
-   dynamoresource.query_last_day_of_readings()
+   dynamoresource.query_all_time()
    print('Done')
 
