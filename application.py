@@ -15,6 +15,11 @@ application = Flask(__name__)
 def index():
    return render_template('index.html')
 
+@application.route('/latex')
+def latex():
+   latex_snippet = r'The normal distribution: \(\ (x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}\) !!!'
+   return render_template('latex_index.html', latex_snippet=latex_snippet)
+
 
 @application.route('/temp_local')
 def temp_local():
