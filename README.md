@@ -7,6 +7,6 @@ Components
 
 
 To-dos:
-* Speed up deployment process using CodePipeline and Docker image (currently running `zip output.zip -r .` then uploading this to ELB)
+* Speed up deployment process using CodePipeline and Docker image (currently horribly hacky, running `zip output.zip -r . -x "venv/*" "analysis/*" "output.zip" ".git/*"` then uploading this to ELB)
 * Analyse trends in data, see analysis tab
 * Experiment with forecasting models

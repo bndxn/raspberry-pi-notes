@@ -8,6 +8,7 @@ import plotly
 import plotly.express as px
 import boto3
 import numpy as np
+from helpers import graphers, s3_connection
 
 application = Flask(__name__)
 
@@ -23,36 +24,7 @@ def temp_local():
    df = pd.read_csv('local_copy_test2.csv', skiprows=0, index_col=0)
    df.rename(columns={'0':'temp', '1':'hum', '2': 'time'},inplace=True)
 
-   fig = make_subplots(specs=[[{"secondary_y": True}]])
-
-   fig.add_trace(
-    go.Scatter(x=df['time'],y=df['temp'], name="Temperature", mode='markers'),
-    secondary_y=False,
-   )
-
-   fig.add_trace(
-    go.Scatter(x=df['time'],y=df['hum'], name="Humidity", mode='markers'),
-    secondary_y=True,
-   )
-
-   fig.update_layout(
-    title_text="Temperature and humidity over time"
-   )
-
-   fig.update_layout(
-    autosize=False,
-     yaxis = dict(
-         tickmode = 'array',
-         tickvals = np.arange(0,50,0.5)),
-     yaxis_tickformat=' ',
-    )
-
-   # Set x-axis title
-   fig.update_xaxes(title_text="Time")
-
-   # Set y-axes titles
-   fig.update_yaxes(title_text="<b>Temperature</b>", title_font_color='blue', secondary_y=False)
-   fig.update_yaxes(title_text="<b>Humidity</b>", title_font_color='red', secondary_y=True)
+   fig = graphers.generate_time_and_humidity_figure(df)
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
@@ -61,11 +33,8 @@ def temp_local():
 @application.route('/last_day')
 def last_day():
 
-   client = boto3.client('dynamodb', region_name='us-east-1')
-   
-   table_name = 'pi-temperature-readings'
-
    day_ago = str(pd.Timestamp.now() - pd.Timedelta(days=1))
+
 
    scan_params = {
          'TableName': table_name,
@@ -76,45 +45,17 @@ def last_day():
 
    response_ts = client.scan(**scan_params)
 
-   df = pd.json_normalize(response_ts['Items'])
-   df.sort_values(by='timestamp.S',inplace=True)
-   
-   # Not sure why this makes these graphs match the notebook ones
-   df.to_csv('last_day.csv')
-   del df
-   df = pd.read_csv('last_day.csv')
+   df = pd.json_normalize(response_ts['Items']
+                        ).rename(
+                        columns={'timestamp.S':'timestamp', 
+                                 'temperature.S':'temperature',
+                                 'humidity.S':'humidity'}
+                        ).sort_values(by='time')
 
+   # Using separate file for this
+   fig = px.scatter(df, x="timestamp", y=["humidity","temperature"], 
+                    title='Past day\'s humidity and temperature!')
 
-   df.rename(columns={'timestamp.S':'time', 'temperature.S':'temp',
-                       'humidity.S':'hum'},inplace=True)
-
-   
-   fig = make_subplots(specs=[[{"secondary_y": True}]])
-
-   fig.add_trace(
-    go.Scatter(x=df['time'],y=df['temp'], name="Temperature", mode='markers'),
-    secondary_y=False,
-   )
-
-   fig.add_trace(
-    go.Scatter(x=df['time'],y=df['hum'], name="Humidity", mode='markers'),
-    secondary_y=True,
-   )
-
-   fig.update_layout(
-    title_text="Temperature and humidity over time"
-   )
-
-   fig.update_layout(
-    autosize=False
-    )
-
-   # Set x-axis title
-   fig.update_xaxes(title_text="Time")
-
-   # Set y-axes titles
-   fig.update_yaxes(title_text="<b>Temperature</b>", title_font_color='blue', secondary_y=False)
-   fig.update_yaxes(title_text="<b>Humidity</b>", title_font_color='red', secondary_y=True)
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
@@ -125,7 +66,6 @@ def last_week():
    return render_template('index.html')
 
 
-
 @application.route('/all_time')
 def all_time():
 
@@ -133,8 +73,8 @@ def all_time():
    
    table_name = 'pi-temperature-readings'
 
-   # First recordings on the pi were from 2023-04-21
-   start_date = str(pd.Timestamp('2023-04-21'))
+   # First recordings on the pi were from 2023-04-21, but complete from 28th
+   start_date = str(pd.Timestamp('2023-04-28'))
 
    scan_params = {
          'TableName': table_name,
@@ -158,7 +98,6 @@ def all_time():
 
    fig = px.scatter(df, x="timestamp", y=["humidity","temp"], 
                     title='All-time humidity and temperature in the grove!')
-   fig.show()
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)

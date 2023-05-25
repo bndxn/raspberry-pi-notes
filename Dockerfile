@@ -9,6 +9,7 @@ WORKDIR /app
 
 # Copy the templates into the app
 COPY templates /app/templates/
+COPY helpers /app/helpers/
 COPY static /app/static/
 
 # Copy the local readings to the working directory
