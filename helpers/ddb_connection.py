@@ -47,6 +47,21 @@ class DynamoResource():
       return df
 
 
+def df_stored_locally():
+   
+  data = [[56.15,20.46,'2023-05-13 03:30:04.185467'],
+         [56.02,20.46,'2023-05-13 03:40:04.646393'],
+         [55.97,20.48,'2023-05-13 03:50:04.093586'],
+         [56.07,20.40,'2023-05-13 04:00:04.536077']]
+
+  df = pd.DataFrame(data)
+  
+  df.rename(columns={0:'temperature', 1:'humidity', 2: 'timestamp'},inplace=True)
+  df[['humidity', 'temperature']] = df[['humidity', 'temperature']].apply(pd.to_numeric)
+  df['timestamp']  = df['timestamp'].apply(pd.Timestamp)
+
+  return df
+
 if __name__ == '__main__':
    dynamoresource = DynamoResource()
    dynamoresource.query()

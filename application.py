@@ -20,9 +20,7 @@ def index():
 @application.route('/temp_local')
 def temp_local():
    
-   # For now, trying out local version
-   df = pd.read_csv('local_copy_test2.csv', skiprows=0, index_col=0)
-   df.rename(columns={'0':'temp', '1':'hum', '2': 'time'},inplace=True)
+   df = ddb_connection.df_stored_locally()
 
    fig = graphers.overlapping_temperature_and_humidity(df)
 
@@ -58,10 +56,6 @@ def all_time():
    df = ddb_connection.DynamoResource.query(connection)
 
    fig = graphers.separate_temperature_and_humidity(df)
-
-
-   # fig = px.scatter(df, x="timestamp", y=["humidity","temperature"], 
-   #                  title='All-time humidity and temperature in the grove!')
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', graphJSON=graphJSON)
