@@ -26,9 +26,9 @@ def overlapping_temperature_and_humidity(df):
     title_text="Temperature and humidity"
     )
 
-    fig.update_layout(
-    autosize=True
-    )
+    # fig.update_layout(
+    # autosize=True
+    # )
 
     # Set x-axis title
     fig.update_xaxes(title_text="Time")

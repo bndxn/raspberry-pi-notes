@@ -2,8 +2,8 @@
 
 {% block content %}
 
-<h2>{% block title %} Temperature {% endblock %}</h2>
-
+<h2>{% block title %}{{header}}{% endblock %}</h2>
+  <div>{{description}}</div>
   <div id='chart' class='chart'></div>
   <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
   <script type='text/javascript'>

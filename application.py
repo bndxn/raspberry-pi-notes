@@ -25,7 +25,8 @@ def temp_local():
    fig = graphers.overlapping_temperature_and_humidity(df)
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-   return render_template('notdash.html', graphJSON=graphJSON)
+   return render_template('notdash.html', graphJSON=graphJSON,
+            header='Local copy', description='Data stored locally (non-DDB)')
 
 
 @application.route('/last_day')
@@ -40,7 +41,8 @@ def last_day():
    fig = graphers.overlapping_temperature_and_humidity(df)
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-   return render_template('notdash.html', graphJSON=graphJSON)
+   return render_template('notdash.html', graphJSON=graphJSON, 
+            header='Last day', description='Temperature and humidity over the last day')
 
 
 @application.route('/last_week')
@@ -55,10 +57,15 @@ def all_time():
 
    df = ddb_connection.DynamoResource.query(connection)
 
-   fig = graphers.separate_temperature_and_humidity(df)
+   fig = px.scatter(df, x='timestamp', y='temperature')
+   
+   fig.update_yaxes(title_text='Temperature')
+   fig.update_xaxes(title_text='Time')
+
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-   return render_template('notdash.html', graphJSON=graphJSON)
+   return render_template('notdash.html', graphJSON=graphJSON,
+            header='Temperature only', description='Temperature only, since start of measurements.')
 
 
 if __name__ == "__main__":
