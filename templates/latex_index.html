@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+
+{% block content %}
+
 <head>
-    <title>LaTeX Snippet</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-    <h1>LaTeX Snippet Example</h1>
+    <h1>{% block title %} LaTeX Snippet Example {% endblock %}</h1>
     <p>{{ latex_snippet | safe }}</p>
 </body>
-</html>
+
+{% endblock %}
