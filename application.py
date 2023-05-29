@@ -17,8 +17,28 @@ def index():
 
 @application.route('/latex')
 def latex():
-   latex_snippet = r'The normal distribution: \(\ (x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}\) !!!'
-   return render_template('latex_index.html', latex_snippet=latex_snippet)
+   article = {
+      'article': 'Testing multiline',
+      'text': """Let \(\mathbf{a}\) and \(\mathbf{b}\) be vectors in an inner product space. We want to show that \(|\langle \mathbf{a}, \mathbf{b} \rangle| \leq \|\mathbf{a}\| \cdot \|\mathbf{b}\|\). 
+                  Consider the real function \(f(t) = \|\mathbf{a} - t\mathbf{b}\|^2\), where \(t\) is a real scalar.
+
+                  Expanding the norm expression, we have:
+
+                  \[
+                  f(t) = \|\mathbf{a} - t\mathbf{b}\|^2 = \langle \mathbf{a} - t\mathbf{b}, \mathbf{a} - t\mathbf{b} \rangle
+                  \]
+
+                  Using the linearity and conjugate symmetry properties of inner products, we can expand the above expression as:
+
+                  \[
+                  f(t) = \langle \mathbf{a}, \mathbf{a} \rangle - t \langle \mathbf{a}, \mathbf{b} \rangle - \overline{t} \langle \mathbf{b}, \mathbf{a} \rangle + t\overline{t} \langle \mathbf{b}, \mathbf{b} \rangle
+                  \]
+
+                  Simplifying further, we obtain:"""}
+
+
+
+   return render_template('latex.html', latex_snippet=article)
 
 
 @application.route('/temp_local')
