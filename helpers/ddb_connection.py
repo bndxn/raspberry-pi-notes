@@ -14,7 +14,8 @@ class DynamoResource():
     self.dynamodb = boto3.client('dynamodb', 
                                  aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), 
                                  aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'), 
-                                 region_name=os.getenv('AWS_DEFAULT_REGION'))
+                                 region_name='us-east-1'
+                                 )
 
   def query(self, since_timestamp=None):
       
@@ -34,7 +35,6 @@ class DynamoResource():
 
       response_ts = self.dynamodb.scan(**scan_params)
 
-      print('Timestamp response: json_normalise')
       df = pd.json_normalize(response_ts['Items'])
       df.sort_values(by='timestamp.S',inplace=True)
 

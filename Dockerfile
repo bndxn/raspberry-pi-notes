@@ -12,9 +12,6 @@ COPY templates /app/templates/
 COPY helpers /app/helpers/
 COPY static /app/static/
 
-# Copy the local readings to the working directory
-COPY local_copy_test2.csv .
-
 # Copy the dependencies file to the working directory
 COPY requirements.txt .
 
