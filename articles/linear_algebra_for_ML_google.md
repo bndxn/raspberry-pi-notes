@@ -43,9 +43,39 @@ Three topics covered:
 
 * An embedding is putting a vector in higher dimensions in lower dimensions
 * How to find embeddings? One way is through matrix factorisations. A matrix represents a process of turning one vector into another one. 
+
+**Matrix factorisation route**
 * A matrix can be a transformation of an entire vector space
 * Undoing matrix multiplication is matrix factorisation - are there smaller matrices than be multiplied together to get the answer?
 * Every matrix can be factored - the factorisation is the singular value decomposition
 * Every matrix can be written as the product of three smaller matrices
 * SVD appears in lots of places
-* The rows and columns for the components of the SVD should be similar 
+* For an original matrix, find smaller matrices U and V, so that taking their product gives the original matrix
+
+**Neural network route**
+* Put the original data into the neural network, and the outcome can be a vector embedding
+
+* In either case you want to keep information
+
+### 3. Dimensionality reduction
+
+* Find the eigenvectors, aka principal components
+* Eigenvectors for a matrix are those that do not have their direction changed when transformed by that matrix, but which might scale 
+* The eigenvalue is the scaling factor
+* Eigenvectors encode valuable information
+* You might have n data points in m-dim space, which are clustered around a line or lower-dimensional subspace
+
+![PCA image](pca_image.png)
+
+**How to do PCA?**
+* Organise points into an mxn matrix A, then compute the eigenvectors of the matrix multiplied by its transpose, $AA^{t}$. 
+* Then the data points are centered by subtracting the mean of each row
+* Which eigenvector has the largest scaling factor (eigenvalue)? This one points the principal components/direction of the data
+* So the eigenvectors tell you about inherent features of your data
+
+
+### Summary
+
+* Often data only occupies a small portion of large-dimensional vector space
+* Working in smaller spaces increases efficiency
+* Linear algebra helps you reduce dimensions and reveal relevant structure in the data
