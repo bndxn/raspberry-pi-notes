@@ -17,6 +17,11 @@ def index():
    return render_template('index.html')
 
 
+@application.route('/about')
+def about():
+   return render_template('about.html')
+
+
 @application.route('/temp_local')
 def temp_local():
    

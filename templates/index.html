@@ -1,6 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Homepage {% endblock %}</h1>
-    <p>Welcome to my wonderful temperature analysis website! I think it's not too bad!</p>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-4 col-md-6">
+      <div class="card mb-4">
+        <img src="{{ url_for('static', filename='images/randomart_1.png') }}" class="card-img-top" alt="Image 1">
+        <div class="card-body">
+          <h5 class="card-title">Card 1</h5>
+          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="card mb-4">
+        <img src="{{ url_for('static', filename='images/randomart_2.png') }}" class="card-img-top" alt="Image 2">
+        <div class="card-body">
+          <h5 class="card-title">Card 2</h5>
+          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="card mb-4">
+        <img src="{{ url_for('static', filename='images/randomart_3.png') }}" class="card-img-top" alt="Image 3">
+        <div class="card-body">
+          <h5 class="card-title">Card 3</h5>
+          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
