@@ -46,21 +46,12 @@ def latex():
 def about():
    return render_template('about.html')
 
+@application.route('/blog')
+def blog():
+   return render_template('blog.html')
 
-@application.route('/temp_local')
-def temp_local():
-   
-   df = ddb_connection.df_stored_locally()
-
-   fig = graphers.overlapping_temperature_and_humidity(df)
-
-   graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-   return render_template('notdash.html', graphJSON=graphJSON,
-            header='Local copy', description='Data stored locally (non-DDB)')
-
-
-@application.route('/last_day')
-def last_day():
+@application.route('/live_data')
+def live_data():
 
    day_ago = str(pd.Timestamp.now() - pd.Timedelta(days=1))
 
@@ -74,10 +65,6 @@ def last_day():
    return render_template('notdash.html', graphJSON=graphJSON, 
             header='Last day', description='Temperature and humidity over the last day')
 
-
-@application.route('/last_week')
-def last_week():
-   return render_template('index.html')
 
 
 @application.route('/all_time')
