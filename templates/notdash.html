@@ -10,5 +10,9 @@
     var graphs = {{graphJSON | safe}};
     Plotly.plot('chart',graphs,{});
   </script>
+
+  <div><h3>Forecast ahead</h3>
+    <p>Baseline:{{baseline_forecast}}C</p><br>
+    <p>Model forecast:{{model_forecast}}C (needs to be scaled, but still!)</p></div>
   
 {% endblock %}

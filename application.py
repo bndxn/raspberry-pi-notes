@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.graph_objects as go
@@ -9,6 +9,9 @@ import plotly.express as px
 import boto3
 import numpy as np
 from helpers import ddb_connection, graphers
+import joblib
+from tensorflow import keras
+
 
 application = Flask(__name__)
 
@@ -61,9 +64,23 @@ def live_data():
 
    fig = graphers.overlapping_temperature_and_humidity(df)
 
+   baseline_forecast = df['temperature'].iloc[-1]
+
+   import os
+   print(os.getcwd())
+   model = keras.models.load_model('static/basic_model.keras')
+   input_to_model = np.array(df['temperature'].iloc[-12:]).reshape((1, 12, 1))
+   predictions = model.predict(input_to_model)
+   print(len(predictions))
+
+
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-   return render_template('notdash.html', graphJSON=graphJSON, 
-            header='Last day', description='Temperature and humidity over the last day')
+   return render_template('notdash.html', 
+            graphJSON=graphJSON, 
+            header='Last day', 
+            description='Temperature and humidity over the last day',
+            baseline_forecast=baseline_forecast,
+            model_forecast=predictions)
 
 
 
