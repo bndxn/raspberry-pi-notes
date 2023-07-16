@@ -11,7 +11,6 @@ import numpy as np
 from helpers import ddb_connection, graphers
 from tensorflow import keras
 
-
 application = Flask(__name__)
 
 @application.route('/')
