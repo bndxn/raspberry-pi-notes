@@ -45,7 +45,7 @@ readings = list[Temper]()
 def upload_data_DDB(reading):
     print('Uploading to DDB')
     upload = DDBReadings()
-    datetime = str(pd.Timestamp.now())
+    datetime = str(pd.Timestamp.now().round('1min'))
     temperature = reading[0]
     humidity = reading[1]
     print(f'DDB upload: Datetime: {datetime}, temp: {temperature}, hum: {humidity}')
