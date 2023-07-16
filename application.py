@@ -9,7 +9,6 @@ import plotly.express as px
 import boto3
 import numpy as np
 from helpers import ddb_connection, graphers
-import joblib
 from tensorflow import keras
 
 
