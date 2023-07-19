@@ -10,6 +10,10 @@ import boto3
 import numpy as np
 from helpers import ddb_connection, graphers
 from tensorflow import keras
+import os
+from datetime import datetime
+
+
 
 application = Flask(__name__)
 
@@ -49,7 +53,18 @@ def about():
 
 @application.route('/blog')
 def blog():
-   return render_template('blog.html')
+
+   posts = []
+
+   for post in os.listdir('static/posts/'):
+      title, _ = post.split(",")
+      date = _.split(".")[0]
+
+      formatted_date = datetime.strptime(date, "%Y%m%d").strftime("%B %d, %Y")
+
+      posts.append({'title': title, 'created': formatted_date})      
+
+   return render_template('blog.html', posts=posts)
 
 @application.route('/live_data')
 def live_data():
