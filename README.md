@@ -20,6 +20,15 @@ then uploading this to ELB)
 - [] Deploy the LSTM to make predictions
 - [] Add a daily and weekly box and whisker plot to get longer-term trends
 
+## Articles I want to write
+
+- Why is the negative gradient used in gradient descent?
+- What is the probabilistic approach? 
+- What is a generative approach?
+- Explain L1 and L2 regularisation
+- What is the kernel trick?
+
+
 ## Gotchas
 
 MathJax [docs](https://docs.mathjax.org/en/latest/basic/mathematics.html).
@@ -27,3 +36,4 @@ MathJax [docs](https://docs.mathjax.org/en/latest/basic/mathematics.html).
 ``` 
 The default math delimiters are $$...$$ and \[...\] for displayed mathematics, and \(...\) for in-line mathematics. Note in particular that the $...$ in-line delimiters are not used by default. That is because dollar signs appear too often in non-mathematical settings, which could cause some text to be treated as mathematics unexpectedly.
 ```
+
