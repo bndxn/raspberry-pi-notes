@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify
+from werkzeug.exceptions import abort
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.graph_objects as go
@@ -21,30 +22,19 @@ application = Flask(__name__)
 def index():
    return render_template('index.html')
 
-@application.route('/latex')
-def latex():
-   article = {
-      'article': 'Testing multiline',
-      'text': """Let \(\mathbf{a}\) and \(\mathbf{b}\) be vectors in an inner product space. We want to show that \(|\langle \mathbf{a}, \mathbf{b} \rangle| \leq \|\mathbf{a}\| \cdot \|\mathbf{b}\|\). 
-                  Consider the real function \(f(t) = \|\mathbf{a} - t\mathbf{b}\|^2\), where \(t\) is a real scalar.
-
-                  Expanding the norm expression, we have:
-
-                  \[
-                  f(t) = \|\mathbf{a} - t\mathbf{b}\|^2 = \langle \mathbf{a} - t\mathbf{b}, \mathbf{a} - t\mathbf{b} \rangle
-                  \]
-
-                  Using the linearity and conjugate symmetry properties of inner products, we can expand the above expression as:
-
-                  \[
-                  f(t) = \langle \mathbf{a}, \mathbf{a} \rangle - t \langle \mathbf{a}, \mathbf{b} \rangle - \overline{t} \langle \mathbf{b}, \mathbf{a} \rangle + t\overline{t} \langle \mathbf{b}, \mathbf{b} \rangle
-                  \]
-
-                  Simplifying further, we obtain:"""}
 
 
+def get_post(post_id):
+   for num, post in enumerate(os.listdir('static/posts/')):
+      if num == post_id:
+         return post
+   abort(404)
 
-   return render_template('latex.html', latex_snippet=article)
+@application.route('/<int:post_id>')
+def post(post_id):
+    post = get_post(post_id)
+    return render_template('post.html', post=post)
+
 
 
 @application.route('/about')
@@ -54,17 +44,19 @@ def about():
 @application.route('/blog')
 def blog():
 
-   posts = []
+   return render_template('test_article.html')
 
-   for post in os.listdir('static/posts/'):
-      title, _ = post.split(",")
-      date = _.split(".")[0]
+   # posts = []
 
-      formatted_date = datetime.strptime(date, "%Y%m%d").strftime("%B %d, %Y")
+   # for post in os.listdir('static/posts/'):
+   #    title, _ = post.split(",")
+   #    date = _.split(".")[0]
 
-      posts.append({'title': title, 'created': formatted_date})      
+   #    formatted_date = datetime.strptime(date, "%Y%m%d").strftime("%B %d, %Y")
 
-   return render_template('blog.html', posts=posts)
+   #    posts.append({'title': title, 'created': formatted_date})      
+
+   # return render_template('blog.html', posts=posts, enumerate=enumerate)
 
 @application.route('/live_data')
 def live_data():
@@ -79,13 +71,15 @@ def live_data():
 
    baseline_forecast = df['temperature'].iloc[-1]
 
-   import os
    print(os.getcwd())
    model = keras.models.load_model('static/basic_model.keras')
    input_to_model = np.array(df['temperature'].iloc[-12:]).reshape((1, 12, 1))
-   predictions = model.predict(input_to_model)
-   print(len(predictions))
+   predictions = model.predict(input_to_model)[0][0]
 
+   temp_mean =  21.735619
+   temp_std = 1.946606
+
+   predictions = (predictions * temp_std ) + temp_mean
 
    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
    return render_template('notdash.html', 
@@ -93,7 +87,7 @@ def live_data():
             header='Last day', 
             description='Temperature and humidity over the last day',
             baseline_forecast=baseline_forecast,
-            model_forecast=predictions)
+            model_forecast=np.round(predictions,2))
 
 
 
