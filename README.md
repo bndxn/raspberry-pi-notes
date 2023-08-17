@@ -37,23 +37,6 @@ MathJax [docs](https://docs.mathjax.org/en/latest/basic/mathematics.html).
 The default math delimiters are $$...$$ and \[...\] for displayed mathematics, and \(...\) for in-line mathematics. Note in particular that the $...$ in-line delimiters are not used by default. That is because dollar signs appear too often in non-mathematical settings, which could cause some text to be treated as mathematics unexpectedly.
 ```
 
-## Notes on the blog 
+## Formatting
 
-- Looking for a way to store articles on the web so that I can embed HTML and LaTeX, and also hopefully fairly easy to use
-- Settling on YAML and markdown, e.g. 
-
-```
----
-title: Huyen - Designing ML Systems (Ch1&2)
-created: Feb 2023
----
-
-## Overview of ML systems
-
-$$y = wx + b$$
-
-```
-
-- How to store these online? Want to be able to query data source without loading everything, and also in the future want to be able to search by tag. One option is storing metadata in the file names.
-- GPT4 suggests articles stored in S3, and metadata stored in DDB. A bit more convoluted but think I will do as I want to be able to search by tags and rearrange articles in future. 
-
+* Code formatting is done with **Black**, 

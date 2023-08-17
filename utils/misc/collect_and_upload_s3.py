@@ -12,18 +12,20 @@ import boto3
 # copied this from pi_to_aws.py, not sure what it does
 readings = list[Temper]()
 
-def upload_data(readings):
-    print('Uploading to S3')
-    s3 = boto3.resource('s3')
-    pd.DataFrame(readings).to_csv("readings_for_upload.csv")
-    s3.Bucket('pi-temperature-readings').upload_file(
-        Filename='readings_for_upload.csv', Key='test2.csv')
-    print('Upload to S3 complete')
-    
-#    s3.Bucket('bucket-swiykr').upload_file(
-#	Filename='readings_for_upload.csv', Key='test2.csv')
-#    print('Upload to Lightsail S3 complete')
 
+def upload_data(readings):
+    print("Uploading to S3")
+    s3 = boto3.resource("s3")
+    pd.DataFrame(readings).to_csv("readings_for_upload.csv")
+    s3.Bucket("pi-temperature-readings").upload_file(
+        Filename="readings_for_upload.csv", Key="test2.csv"
+    )
+    print("Upload to S3 complete")
+
+
+#    s3.Bucket('bucket-swiykr').upload_file(
+# 	Filename='readings_for_upload.csv', Key='test2.csv')
+#    print('Upload to Lightsail S3 complete')
 
 
 def temper_s3():
@@ -37,11 +39,10 @@ def temper_s3():
     if len(readings) > 10:
         upload_data(readings)
         readings.clear()
-        
+
+
 schedule.every(2).seconds.do(temper_s3)
 
 while True:
     schedule.run_pending()
     time.sleep(1)
-
-

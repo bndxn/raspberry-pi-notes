@@ -21,22 +21,26 @@ using Boto3. You can use the `aws configure` command to configure the credential
 """
 s3 = boto3.resource("s3")
 
+
 class Reading:
     def __init__(self, temperature=None, temperature_f=None, humidity=None):
         self.timestamp = datetime.datetime.now().isoformat(timespec="milliseconds")
         self.temperature = temperature
         self.temperature_f = temperature_f
         self.humidity = humidity
+
     def to_csv(self):
-            """CSV representation of the object
-           Column order:
-            - timestamp
-            - temperature (Celsius)
-            - temperature (Fahrenheit)
-            - humidity
-            """
-            return (
-                f"{self.timestamp},{self.temperature},{self.temperature_f},{self.humidity}" )
+        """CSV representation of the object
+        Column order:
+         - timestamp
+         - temperature (Celsius)
+         - temperature (Fahrenheit)
+         - humidity
+        """
+        return (
+            f"{self.timestamp},{self.temperature},{self.temperature_f},{self.humidity}"
+        )
+
 
 def get_reading() -> Reading:
     """Returns current readings from the sensor. Sensor DHT11 has sampling rate of 1 Hz, so calling this method more
@@ -47,15 +51,17 @@ def get_reading() -> Reading:
         temperature_f = temperature * (9 / 5) + 32
         humidity = sensor.humidity
         print(
-            f"Temperature: {temperature:.1f} C ({temperature_f:.1f} F). Humidity: {humidity}%")
+            f"Temperature: {temperature:.1f} C ({temperature_f:.1f} F). Humidity: {humidity}%"
+        )
         return Reading(temperature, temperature_f, humidity)
-    
+
     except RuntimeError as error:
-            print(error.args[0])
-            return Reading()
+        print(error.args[0])
+        return Reading()
     except Exception as error:
-            sensor.exit()
-            raise error
+        sensor.exit()
+        raise error
+
 
 def upload_data(readings: list[Reading]):
     """Forms a CSV file and uploads it to AWS"""
@@ -64,6 +70,7 @@ def upload_data(readings: list[Reading]):
     s3object = s3.Object(AWS_S3_BUCKET, AWS_S3_KEY_PREFIX + filename)
     s3object.put(Body=body)
     print(f"File uploaded: {filename}")
+
 
 if __name__ == "__main__":
     readings = list[Reading]()

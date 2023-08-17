@@ -22,74 +22,80 @@ from temper import Temper
 import pandas as pd
 
 
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+REGION_NAME = os.getenv("AWS_DEFAULT_REGION")
 
-#print(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
+# print(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
 
-class DDBReadings():
-  
+
+class DDBReadings:
     def __init__(self):
-      """
-      :param dyn_resource: A Boto3 DynamoDB resource.
-      """
+        """
+        :param dyn_resource: A Boto3 DynamoDB resource.
+        """
 
-      AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-      AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-      REGION_NAME = os.getenv('AWS_DEFAULT_REGION')
+        AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+        AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+        REGION_NAME = os.getenv("AWS_DEFAULT_REGION")
 
-      dyn_resource = boto3.resource('dynamodb', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name='us-east-1')
-      self.table = dyn_resource.Table('pi-temperature-readings')
+        dyn_resource = boto3.resource(
+            "dynamodb",
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            region_name="us-east-1",
+        )
+        self.table = dyn_resource.Table("pi-temperature-readings")
 
     def add_reading(self, datetime, temperature, humidity):
-      """
-      Adds a temperature and humidity reading to the table. 
-      
-      :param datetime: the time the reading was taken
-      :param temperature: temperature as measured by the probe
-      :param humidity: humidity as measured by the probe
-      """
-      try: 
-        self.table.put_item(
-          Item={
-            'timestamp': datetime, 
-            'temperature': temperature, 
-            'humidity': humidity})
-      except ClientError as err:
-        print(err)
-        # logger.error(
-        #   "Couldn't add reading at % to table. Here's why: %s: %s",
-        #   err.response['Error']['Code'], err.response['Error']['Message'])
-     
+        """
+        Adds a temperature and humidity reading to the table.
+
+        :param datetime: the time the reading was taken
+        :param temperature: temperature as measured by the probe
+        :param humidity: humidity as measured by the probe
+        """
+        try:
+            self.table.put_item(
+                Item={
+                    "timestamp": datetime,
+                    "temperature": temperature,
+                    "humidity": humidity,
+                }
+            )
+        except ClientError as err:
+            print(err)
+            # logger.error(
+            #   "Couldn't add reading at % to table. Here's why: %s: %s",
+            #   err.response['Error']['Code'], err.response['Error']['Message'])
+
     # Scanning for readings: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/example_dynamodb_Scan_section.html
     # Another source, simpler code: https://docs.aws.amazon.com/code-library/latest/ug/python_3_dynamodb_code_examples.html
 
     def get_readings(self, time_range):
-      """
-      When finished this function should be able to query the DDB table
+        """
+        When finished this function should be able to query the DDB table
 
-      """
+        """
 
-      try:
-        response = self.table.query(KeyConditionExpression=Key('year').eq(year))
-      except ClientError as err:
-        print(f'Error: {err}')       
-      else:
-          return response['Items']
-        
+        try:
+            response = self.table.query(KeyConditionExpression=Key("year").eq(year))
+        except ClientError as err:
+            print(f"Error: {err}")
+        else:
+            return response["Items"]
 
 
 readings = list[Temper]()
-        
+
 
 def upload_data_DDB(reading):
-    print('Uploading to DDB')
+    print("Uploading to DDB")
     upload = DDBReadings()
     datetime = str(pd.Timestamp.now())
     temperature = reading[0]
     humidity = reading[1]
-    print(f'DDB upload: Datetime: {datetime}, temp: {temperature}, hum: {humidity}')
+    print(f"DDB upload: Datetime: {datetime}, temp: {temperature}, hum: {humidity}")
     upload.add_reading(datetime, temperature, humidity)
 
 
@@ -101,9 +107,10 @@ def temper_ddb():
     # Do the upload
     upload_data_DDB(reading)
 
-if __name__ == '__main__':
-  schedule.every(2).seconds.do(temper_ddb)
 
-  while True:
-      schedule.run_pending()
-      time.sleep(1)
+if __name__ == "__main__":
+    schedule.every(2).seconds.do(temper_ddb)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

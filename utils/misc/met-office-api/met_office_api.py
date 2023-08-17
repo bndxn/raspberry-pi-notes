@@ -3,7 +3,7 @@
 # url = 'https://api-metoffice.apiconnect.ibmcloud.com/v0/forecasts/point/hourly?excludeParameterMetadata=False&includeLocationName=False&latitude=51.5654&longitude=0.1349'
 
 # params = {'X-IBM-Client-Id': '<id>',
-#           'X-IBM-Client-Secret': '<secret>', 
+#           'X-IBM-Client-Secret': '<secret>',
 #           'accept' : 'application/json'}
 
 # response = requests.get(url, params=params)
@@ -26,23 +26,23 @@ import json
 conn = http.client.HTTPSConnection("api-metoffice.apiconnect.ibmcloud.com")
 
 headers = {
-    'X-IBM-Client-Id': "<id>",
-    'X-IBM-Client-Secret': "<secret>",
-    'accept': "application/json"
-    }
+    "X-IBM-Client-Id": "<id>",
+    "X-IBM-Client-Secret": "<secret>",
+    "accept": "application/json",
+}
 
-conn.request("GET", "/v0/forecasts/point/hourly?excludeParameterMetadata=False&includeLocationName=False&latitude=51.5654&longitude=0.1349", headers=headers)
+conn.request(
+    "GET",
+    "/v0/forecasts/point/hourly?excludeParameterMetadata=False&includeLocationName=False&latitude=51.5654&longitude=0.1349",
+    headers=headers,
+)
 
 res = conn.getresponse()
 data = res.read()
 
 res_json = json.loads(data.decode("utf-8"))
 
-with open('json_data.json', 'w') as outfile:
+with open("json_data.json", "w") as outfile:
     json.dump(res_json, outfile, sort_keys=True, indent=4)
 
 # print(json.dumps(res_json, sort_keys=True,indent=4))
-
-
-
-
