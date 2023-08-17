@@ -27,7 +27,7 @@ then uploading this to ELB)
 - What is a generative approach?
 - Explain L1 and L2 regularisation
 - What is the kernel trick?
-
+.
 
 ## Gotchas
 
