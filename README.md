@@ -40,3 +40,12 @@ The default math delimiters are $$...$$ and \[...\] for displayed mathematics, a
 ## Formatting
 
 * Code formatting is done with **Black**, 
+
+## Stuart ideas - 17 August 2023
+
+* Use kadru maybe?
+* what's the biggest pain?
+* Learn about code pipeline, code build, and cloud formation
+* Newer approach is more modular 
+* https://aws.amazon.com/cdk/ 
+* https://github.com/bbc/auto-topic-api/blob/main/api/auto_topic_api/auto_topic_api_stack.py 

@@ -6,12 +6,16 @@ created: Feb 2023
 https://www.youtube.com/watch?v=LlKAna21fLE
 
 ### Overview
-Three topics covered: 
+
+The talks covers three areas in which linear algebra is important: 
+
 1. Data representation
 2. Vector embeddings
 3. Dimensionality reduction
 
+
 ### 1. Data representation
+
 * Representing information from the real world as vectors
 * Totality of all of such vectors is the vector space
 * A feature vector is simply one that represents the features of an object
@@ -48,6 +52,7 @@ Three topics covered:
 * How to find embeddings? One way is through matrix factorisations. A matrix represents a process of turning one vector into another one. 
 
 **Matrix factorisation route**
+
 * A matrix can be a transformation of an entire vector space
 * Undoing matrix multiplication is matrix factorisation - are there smaller matrices than be multiplied together to get the answer?
 * Every matrix can be factored - the factorisation is the singular value decomposition
@@ -56,8 +61,8 @@ Three topics covered:
 * For an original matrix, find smaller matrices U and V, so that taking their product gives the original matrix
 
 **Neural network route**
-* Put the original data into the neural network, and the outcome can be a vector embedding
 
+* Put the original data into the neural network, and the outcome can be a vector embedding
 * In either case you want to keep information
 
 ### 3. Dimensionality reduction
@@ -69,6 +74,7 @@ Three topics covered:
 * You might have n data points in m-dim space, which are clustered around a line or lower-dimensional subspace
 
 **How to do PCA?**
+
 * Organise points into an mxn matrix A, then compute the eigenvectors of the matrix multiplied by its transpose, $AA^{t}$. 
 * Then the data points are centered by subtracting the mean of each row
 * Which eigenvector has the largest scaling factor (eigenvalue)? This one points the principal components/direction of the data
