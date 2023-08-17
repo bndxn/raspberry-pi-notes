@@ -1,4 +1,7 @@
-## Google - A friendly introduction to linear algebra for ML (ML Tech Talks)
+---
+title: Google - A friendly introduction to linear algebra for ML (ML Tech Talks)
+created: Feb 2023
+---
 
 https://www.youtube.com/watch?v=LlKAna21fLE
 
@@ -64,8 +67,6 @@ Three topics covered:
 * The eigenvalue is the scaling factor
 * Eigenvectors encode valuable information
 * You might have n data points in m-dim space, which are clustered around a line or lower-dimensional subspace
-
-![PCA image](pca_image.png)
 
 **How to do PCA?**
 * Organise points into an mxn matrix A, then compute the eigenvectors of the matrix multiplied by its transpose, $AA^{t}$. 

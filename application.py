@@ -26,7 +26,6 @@ def index():
 
 def get_post(post_id):
    for num, post_name in enumerate(os.listdir('static/posts/')):
-      print(num)
       if num == post_id:
          with open(f'static/posts/{post_name}', 'r') as f:
             content = f.read()
@@ -36,7 +35,8 @@ def get_post(post_id):
             
             # Parse YAML and Markdown
             post_metadata = yaml.safe_load(front_matter.strip())
-            post_html_content = markdown2.markdown(markdown_content.strip())
+            post_html_content = markdown2.markdown(markdown_content.strip(),
+                                                   extras=["fenced-code-blocks"])
             
             post_data = {
                 'title': post_metadata['title'],
@@ -102,7 +102,6 @@ def live_data():
             description='Temperature and humidity over the last day',
             baseline_forecast=baseline_forecast,
             model_forecast=np.round(predictions,2))
-
 
 
 @application.route('/all_time')

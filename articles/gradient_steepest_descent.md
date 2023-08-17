@@ -32,4 +32,3 @@ Ok putting it all together:
 * We can understand how much any vector contributes to that, by projecting it using the dot product, onto the gradient vector
 * When is this minimsed? When it's the opposite direction to the gradient
 
-So the vector which 

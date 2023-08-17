@@ -1,32 +1,43 @@
 ---
-title: Huyen - Designing ML Systems (Ch1&2)
+title: Huyen - Designing ML Systems (Ch1)
 created: Feb 2023
 ---
 
-## Overview of ML systems
+This is a really excellent book and I encourage you to go out and buy it!
 
-$$y = wx + b$$
+#### Notes on Chapter 1 - Overview of Machine Learning Systems
 
+- What is an ML system? It includes: 
+    - business requirements
+    - interfaces
+    - data stack
+    - model monitoring
+    - infrastructure
+- ML Ops is about bringing ML into production
 
+**When to use ML?**
 
-Introduction 
+- ML is about learning complex patterns from existing data and then using these patterns to make predictions on unseen data
+- Zero-shot learning is a problem set up where, at test time, the model has to make prediction about observations not from classes used in training
+- For our team, where do we get the ground truth of particular tags?
+- Unseen and training data should come from similar distributions 
+- Enterprise applications might have higher accuracy but laxer latency requirements
+- But customer-facing systems might have stricter latency requirements
 
-[With endless thanks to Gilbert Strang]
+**ML research vs production**
 
-Consider a task where you have some input data $$X$$, and your task is to predict the output $$y$$. This idea of a linear relationship between variables is found in many fields. 
+- production is more about stakeholder requirements, lower latency, and shifting datasets
+    - Latency: the time between receiving a query and returning the result
+- Production data is much messier and requires more preprocessing than standardised research datasets
+- one way to deal with different objectives is to develop multiple models and combine them
+- ensemble models a good example: used in research with high accuracy but end up being too complex to use in production
+- research prioritises fast training but this might not be the same as fast inference
 
-$$y = wx + b$$
+**ML in the real world**
 
-A more general form of this is where you can take in multiple inputs, $$x_1, x_2, ...$$. We can use the same approach to find the relationship between multiple input variables and an output variable. 
-
-In linear regression, we work out the weights $$w_1, w_2, ...$$ in the equation $$y = x_1w_1 + x_2w_2 + ... + b$$
-
-You may remember from school doing something like: 
-
-$$S_{xy} = \sum{xy} - \frac{\sum{x}\sum{y}}{n}$$
-
-$$S_{xx} = \sum{x^2} - \frac{(\sum{x})^2}{n}$$
-
-Then to find the coefficients in our $$y = wx + b$$, we get out our calculators and do something like this:
-$$w=S_{xx}/S_{xy}$$
-$$b=\bar{y} - w\bar{x}$$
+- Fairness - rarely considered, no good metrics for fairness, and can perpetuate systemic biases
+    - Members of minority groups might be particularly affected, but this would not show up on overall scores, as minority groups only make up a small part of the evaluation metrics
+- Interpretability - mixed responses from people on whether they want more interpretable models, but users also might have a ‘right to explanation’
+- “The vast majority of ML-related jobs will be, and already are, in productionizing ML”
+- ML should learn more from SWE
+    - SWE has separation of code and data but ML is more mixed together, and requires more vigilance about the data used in training and in deployment
