@@ -1,19 +1,20 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, abort, jsonify
 from werkzeug.exceptions import abort
 import pandas as pd
-import plotly.graph_objs as go
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+#import plotly.graph_objs as go
+#import plotly.graph_objects as go
+#from plotly.subplots import make_subplots
 import json
 import plotly
 import plotly.express as px
-import boto3
+#import boto3
 import numpy as np
 from helpers import ddb_connection, graphers
-from tensorflow import keras
+#from tensorflow import keras
 import os
 from datetime import datetime
-
+import yaml
+import markdown2
 
 
 application = Flask(__name__)
@@ -23,11 +24,27 @@ def index():
    return render_template('index.html')
 
 
-
 def get_post(post_id):
-   for num, post in enumerate(os.listdir('static/posts/')):
+   for num, post_name in enumerate(os.listdir('static/posts/')):
+      print(num)
       if num == post_id:
-         return post
+         with open(f'static/posts/{post_name}', 'r') as f:
+            content = f.read()
+            
+            # Split YAML front matter from markdown content
+            front_matter, markdown_content = content.split('---')[1:3]
+            
+            # Parse YAML and Markdown
+            post_metadata = yaml.safe_load(front_matter.strip())
+            post_html_content = markdown2.markdown(markdown_content.strip())
+            
+            post_data = {
+                'title': post_metadata['title'],
+                'created': post_metadata['created'],
+                'content': post_html_content
+            }
+            
+            return post_data
    abort(404)
 
 @application.route('/<int:post_id>')
@@ -36,27 +53,24 @@ def post(post_id):
     return render_template('post.html', post=post)
 
 
-
 @application.route('/about')
 def about():
    return render_template('about.html')
 
 @application.route('/blog')
 def blog():
+   
+   posts = []
 
-   return render_template('test_article.html')
+   for post in os.listdir('static/posts/'):
+      title, _ = post.split(",")
+      date = _.split(".")[0]
 
-   # posts = []
+      formatted_date = datetime.strptime(date, "%Y%m%d").strftime("%B %d, %Y")
 
-   # for post in os.listdir('static/posts/'):
-   #    title, _ = post.split(",")
-   #    date = _.split(".")[0]
+      posts.append({'title': title, 'created': formatted_date})      
 
-   #    formatted_date = datetime.strptime(date, "%Y%m%d").strftime("%B %d, %Y")
-
-   #    posts.append({'title': title, 'created': formatted_date})      
-
-   # return render_template('blog.html', posts=posts, enumerate=enumerate)
+   return render_template('blog.html', posts=posts, enumerate=enumerate)
 
 @application.route('/live_data')
 def live_data():
