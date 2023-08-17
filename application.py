@@ -6,7 +6,7 @@ import plotly
 import plotly.express as px
 import numpy as np
 from helpers import ddb_connection, graphers
-from tensorflow import keras
+#from tensorflow import keras
 import os
 from datetime import datetime
 import yaml
