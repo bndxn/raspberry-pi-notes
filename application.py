@@ -6,7 +6,7 @@ import plotly
 import plotly.express as px
 import numpy as np
 from helpers import ddb_connection, graphers
-#from tensorflow import keras
+from tensorflow import keras
 import os
 from datetime import datetime
 import yaml
@@ -96,7 +96,7 @@ def live_data():
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template(
-        "notdash.html",
+        "plotly.html",
         graphJSON=graphJSON,
         header="Last day",
         description="Temperature and humidity over the last day",
@@ -118,7 +118,7 @@ def all_time():
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template(
-        "notdash.html",
+        "plotly.html",
         graphJSON=graphJSON,
         header="Temperature only",
         description="Temperature only, since start of measurements.",

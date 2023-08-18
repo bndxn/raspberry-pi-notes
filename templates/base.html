@@ -20,6 +20,22 @@
         <link rel="stylesheet" href="../static/css/all.min.css">
     
         <style>
+          /* Custom CSS for hyperlinks */
+
+          a {
+            color: #0000B0; /* Dark blue color */
+          }
+
+          a:hover {
+            color: #0000A0; /* Slightly brighter blue for hover effect */
+          }
+          
+          .badge-dark-grey {
+              background-color: #333333; /* Dark grey color */
+              color: #ffffff; /* White text color for better contrast */
+          }
+
+          
           /* Custom CSS for accordion */
           .accordion-box {
               background-color: transparent; /* Set the accordion boxes background to transparent */
@@ -29,6 +45,8 @@
               margin-bottom: 10px; /* Optional: Add margin between accordion boxes */
               padding-left: 10px;
           }
+
+          
   
           /* Additional custom styles for accordion title */
           .accordion-title {
@@ -122,7 +140,7 @@
 
     <div class="container mt-4">
       <div class="row justify-content-center">
-        <div class="col-md-8 col-xs-12">
+        <div class="col-lg-10 col-md-8 col-xs-12">
           {% block content %} {% endblock %}
         </div>
       </div>

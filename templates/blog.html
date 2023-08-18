@@ -7,13 +7,19 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
+<div class="row align-items-center">
+    <div class="col text-center">
+        <h2>Blog</h2>
+    </div>
+</div>
+
 <div class="container mt-4">
 
     {% for post in posts %}
     <a href="{{ loop.index0 }}">
         <h2>{{ post['title'] }}</h2>
     </a>
-    <span class="badge badge-primary">{{ post['created'] }}</span>
+    <p>{{ post['created'] }}</p>
     <hr>
 {% endfor %}
 
