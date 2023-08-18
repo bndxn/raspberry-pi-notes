@@ -41,11 +41,6 @@ rsa==4.9
 s3transfer==0.6.1
 six==1.16.0
 tenacity==8.2.2
-tensorboard==2.13.0
-tensorboard-data-server==0.7.1
-tensorflow==2.13.0
-tensorflow-estimator==2.13.0
-tensorflow-io-gcs-filesystem==0.32.0
 termcolor==2.3.0
 typing_extensions==4.5.0
 tzdata==2023.3

@@ -6,7 +6,6 @@ import plotly
 import plotly.express as px
 import numpy as np
 from helpers import ddb_connection, graphers
-from tensorflow import keras
 import os
 from datetime import datetime
 import yaml
@@ -85,15 +84,6 @@ def live_data():
 
     baseline_forecast = df["temperature"].iloc[-1]
 
-    model = keras.models.load_model("static/basic_model.keras")
-    input_to_model = np.array(df["temperature"].iloc[-12:]).reshape((1, 12, 1))
-    predictions = model.predict(input_to_model)[0][0]
-
-    temp_mean = 21.735619
-    temp_std = 1.946606
-
-    predictions = (predictions * temp_std) + temp_mean
-
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template(
         "plotly.html",
@@ -101,7 +91,7 @@ def live_data():
         header="Last day",
         description="Temperature and humidity over the last day",
         baseline_forecast=baseline_forecast,
-        model_forecast=np.round(predictions, 2),
+        model_forecast=baseline_forecast,
     )
 
 
