@@ -6,8 +6,11 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-
+<div class="row justify-content-center">
+    <div class="col-md-8 col-xs-12">
     <h2>{% block title %}{{ post['title'] }} {% endblock %}</h2>
-    <span class="badge badge-primary">{{ post['created'] }}</span>
+    <p>{{ post['created'] }}</p>
     {{ post['content']|safe }}
+</div>
+</div>
 {% endblock %}
