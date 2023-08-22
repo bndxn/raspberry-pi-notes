@@ -3,7 +3,10 @@ title: Google - A friendly introduction to linear algebra for ML (ML Tech Talks)
 created: Feb 2023
 ---
 
-https://www.youtube.com/watch?v=LlKAna21fLE
+Linear algebra is often identified as one of the foundations of machine learning. 
+
+I liked this quick overview from Google, available [here](https://www.youtube.com/watch?v=LlKAna21fLE). 
+
 
 ### Overview
 
