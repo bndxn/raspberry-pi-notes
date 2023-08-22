@@ -84,6 +84,9 @@ def live_data():
 
     baseline_forecast = df["temperature"].iloc[-1]
 
+    # A bodge fix, while I change to something like tensorflow-lite
+    model_forecast = baseline_forecast + 1.62
+
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template(
         "plotly.html",
@@ -91,7 +94,7 @@ def live_data():
         header="Last day",
         description="Temperature and humidity over the last day",
         baseline_forecast=baseline_forecast,
-        model_forecast=baseline_forecast,
+        model_forecast=model_forecast,
     )
 
 
