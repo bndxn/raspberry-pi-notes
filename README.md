@@ -39,6 +39,8 @@ The default math delimiters are $$...$$ and \[...\] for displayed mathematics, a
 
 Notes on flask and markdown here https://flask-blogging.readthedocs.io/en/latest/#quick-start-example. 
 
+The problem with some parts of the latex not rendering were because of the use of '_' as a special character. Can I get around that? Might be worth a new site, since this is all seeming like a hassle. 
+
 ## Formatting
 
 * Code formatting is done with **Black**, 
