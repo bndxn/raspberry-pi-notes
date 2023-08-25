@@ -2,28 +2,14 @@
 
 {% block content %}
 
-<head>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head>
+<h2 class="text-center">Blog</h2>
 
-<div class="row align-items-center">
-    <div class="col text-center">
-        <h2>Blog</h2>
-    </div>
-</div>
-
-<div class="container mt-4">
-
-    {% for post in posts %}
+{% for post in posts %}
     <a href="{{ loop.index0 }}">
         <h2>{{ post['title'] }}</h2>
     </a>
     <p>{{ post['created'] }}</p>
     <hr>
 {% endfor %}
-
-
-</div>
 
 {% endblock %}
