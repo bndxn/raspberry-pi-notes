@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="../static/css/all.min.css">
     <link rel="stylesheet" href="../static/css/style.css">
 
-
     
       <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -106,9 +105,9 @@
 
         .footer {
             position: absolute;
-            bottom: 0;
+            bottom: 2%;
             width: 100%;
-            height: 40px;
+            height: 2%;
             /* Adjust this value based on the desired footer height */
         }
     </style>
@@ -145,18 +144,13 @@
 
     <!-- Primary Row -->
     <div class="row">
-        
-        <!-- Empty space filler on the left (1/3 of the screen) -->
         <div class="col-md-3"></div>
         
-        <!-- Content block in the middle (1/3 of the screen) -->
         <div class="col-md-6">
             {% block content %}
-            <!-- This is where child templates will insert their content -->
             {% endblock %}
         </div>
 
-        <!-- Empty space filler on the right (1/3 of the screen) -->
         <div class="col-md-3"></div>
         
     </div> <!-- End Primary Row -->

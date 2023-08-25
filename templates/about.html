@@ -2,18 +2,14 @@
 
 {% block content %}
         <div class="row align-items-center">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="text-center">
-                    <img src="{{ url_for('static', filename='images/randomart_5.png') }}" alt="Headshot" class="img-fluid">
-                </div>
-            </div>
-            <div class="col-md-8">
-                <h2>About Me</h2>
-                <p>I am a motivated and ambitious data scientist with experience in various machine learning domains, including time series forecasting, classification, NLP and LLMs, and computer vision. 
-                    <br><br>Following six years of valuable consulting and finance leadership experience, I studied MSc Computer Science at UCL and focused on machine learning. 
-                    I graduated with a distinction, and my dissertation using computer vision for energy forecasting was accepted as a <a href="https://www.climatechange.ai/papers/neurips2022/58">NeurIPS workshop paper</a>.</p>
-                    <div id="skillsAccordion">
+            <div class="col">
+                <h4>About me</h4>
+                <p>I'm currently working as a data scientist at the BBC. I'm interested in understanding and deploying machine learning models in real world environments. 
+                <br><br>    
+                In the past, I worked in consulting, qualified as an accountant, then worked as a finance lead at a fast-growing charity. 
+                <br><br>
+                In 2021 I switched career into data science, studying MSc Computer Science at UCL, with a focus on machine learning. I graduated with a distinction, and my dissertation using computer vision for energy forecasting was published as a <a href="https://www.climatechange.ai/papers/neurips2022/58">NeurIPS workshop paper</a>.</p>
+                <div id="skillsAccordion">
                     <div class="accordion-box">
                         <h3 class="accordion-title">
                             <button class="accordion-toggle" type="button" data-toggle="collapse" data-target="#collapseSkills" aria-expanded="false" aria-controls="collapseSkills">
@@ -84,7 +80,6 @@
             </div>
             </div>
         </div>
-    </div>
 
 
 {% endblock %}
