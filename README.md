@@ -37,6 +37,8 @@ MathJax [docs](https://docs.mathjax.org/en/latest/basic/mathematics.html).
 The default math delimiters are $$...$$ and \[...\] for displayed mathematics, and \(...\) for in-line mathematics. Note in particular that the $...$ in-line delimiters are not used by default. That is because dollar signs appear too often in non-mathematical settings, which could cause some text to be treated as mathematics unexpectedly.
 ```
 
+Notes on flask and markdown here https://flask-blogging.readthedocs.io/en/latest/#quick-start-example. 
+
 ## Formatting
 
 * Code formatting is done with **Black**, 

@@ -10,8 +10,12 @@ import os
 from datetime import datetime
 import yaml
 import markdown2
+from flaskext.markdown import Markdown
+
 
 application = Flask(__name__)
+Markdown(application)
+
 
 
 @application.route("/")
