@@ -40,6 +40,8 @@ def get_post(post_id):
                     markdown_content.strip(), extras=["fenced-code-blocks"]
                 )
 
+                # Add a regex to convert _ to \_ and I think all markdown will render correctly!
+
                 post_data = {
                     "title": post_metadata["title"],
                     "created": post_metadata["created"],

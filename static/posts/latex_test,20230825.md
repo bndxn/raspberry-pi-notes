@@ -27,3 +27,7 @@ You may remember from school doing something like:
 Then to find the coefficients in our $$y = wx + ... + b$$, we get $$a^2 + w\_1 + b^2 = c^2$$ out our calculators and do something like this:
 \[w=S\_{xx}/S\_{xy}\]
 \[b=\bar{y} - w\bar{x}\]
+
+Here is one underscore _ that was one. 
+
+And now with an escape \_ that's another. 
