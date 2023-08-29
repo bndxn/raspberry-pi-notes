@@ -10,8 +10,12 @@ import os
 from datetime import datetime
 import yaml
 import markdown2
+from flaskext.markdown import Markdown
+
 
 application = Flask(__name__)
+Markdown(application)
+
 
 
 @application.route("/")
@@ -35,6 +39,8 @@ def get_post(post_id):
                 post_html_content = markdown2.markdown(
                     markdown_content.strip(), extras=["fenced-code-blocks"]
                 )
+
+                # Add a regex to convert _ to \_ and I think all markdown will render correctly!
 
                 post_data = {
                     "title": post_metadata["title"],

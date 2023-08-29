@@ -37,6 +37,12 @@ MathJax [docs](https://docs.mathjax.org/en/latest/basic/mathematics.html).
 The default math delimiters are $$...$$ and \[...\] for displayed mathematics, and \(...\) for in-line mathematics. Note in particular that the $...$ in-line delimiters are not used by default. That is because dollar signs appear too often in non-mathematical settings, which could cause some text to be treated as mathematics unexpectedly.
 ```
 
+Notes on flask and markdown here https://flask-blogging.readthedocs.io/en/latest/#quick-start-example. 
+
+The problem with some parts of the latex not rendering were because of the use of '_' as a special character. Can I get around that? Might be worth a new site, since this is all seeming like a hassle. Seems like e.g. jekyll sites wouldn't be in Python, hard to have so many other things going on. So maybe flask stays for now. 
+
+https://flask-blogging.readthedocs.io/en/latest/#quick-start-example
+
 ## Formatting
 
 * Code formatting is done with **Black**, 
