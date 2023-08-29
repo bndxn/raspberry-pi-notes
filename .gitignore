@@ -141,5 +141,5 @@ dmypy.json
 output.zip
 
 # venv
-app-env/*
+app_env/*
 
