@@ -1,6 +1,6 @@
 # Raspberry Pi weather station
 
-A simple application using real data, building a model, and deploying it using AWS.
+An application using real data, building a model, and deploying it using AWS.
 
 Components
 * RasPi and TemperHUM collecting temp and humidity readings

@@ -1,3 +1,6 @@
-
 test: 
-	pytest tests
+	pytest
+
+format:
+	pydocstyle src
+	mypy src
