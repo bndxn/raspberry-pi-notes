@@ -1,21 +1,19 @@
 # Raspberry Pi weather station
 
-An application using real data, building a model, and deploying it using AWS.
+This repo is part of a system which collects temperature data, trains a model, and displays the results on a Flask website.
 
-Components
-* RasPi and TemperHUM collecting temp and humidity readings
-* DynamoDB bucket storing readings
-* Flask application generating Plotly graphs, running on EC2 using Elastic Beanstalk, available at `bendixon.net`.
-* Analysis of data done in notebooks in this repo
+The end-to-end process is as follows:
+1. Temperature and humidity readings are recorded on a Raspberry Pi using a bash script run every 10 minutes from the Pi
+2. Readings are stored to DynamoDB every 10 minutes
+3. Historic readings are queried, and used to train an ML model (an LSTM) to predict the temperature using past readings. 
+4. A web front end shows recent readings and uses the trained ML model to predict future values, hosted on AWS Elastic Beanstalk.
 
-To do:
-* Deploy the model as tf-lite. Previously deploying the full size model caused memory errors which were only fixed by changing the Elastic Beanstalk instance to a larger and more expensive one.
-
+This repo contains the code for parts 1,2,3. Part 4 is stored in a different repo to separate the front-end from the training process, and to allow the web application to run on a smaller instance that does not also need to perform model training. 
 
 # Engineering additions
 
-* Use of CodeBuild on the flask-website, but not yet, before deploying
-* Testing using Pytest
+* CodePipeline is used on the flask-website repo to automatically update the image based on Github commits. 
+* Testing is now done Pytest
 * Makefile used for automating tests, formatting, and resolving dependencies
 * Githooks (https://pre-commit.com/) used to resolve small code issues
 * TODO : Use poetry for environment management
@@ -24,3 +22,15 @@ To do:
 
 * How to run this retraining? Could run it on the Pi, then generate the saved model. Maybe another time could learn how to do this with AWS.
 * How to get the saved model to the new repo? One option could be to run a bash script to copy the model into the flask-website repo, then run an automated commit - which should trigger the codebuild process!
+
+# Formatting
+
+The Makefile checks that the format is valid. 
+
+
+# Testing
+
+
+# Logging
+
+To do 
