@@ -1,3 +1,5 @@
+"""Defines data preprocessing from DDB query result, prepares for input to model."""
+from typing import Tuple
 import numpy as np
 import pandas as pd
 from datetime import timedelta
@@ -6,10 +8,9 @@ from pickle import dump
 from sklearn.preprocessing import StandardScaler
 from tensorflow import keras
 
-def preprocess_data(df: pd.DataFrame)-> pd.DataFrame:
+def clean_data(df: pd.DataFrame)-> pd.DataFrame:
     """
-    Takes a CSV from querying DynamoDB and preprocesses the data to the 
-    required format for input to training. 
+    Apply basic data cleaning and reorganisation.
 
     Args: 
         df: a dataframe of readings, including temperature and humidity.
@@ -39,8 +40,7 @@ def preprocess_data(df: pd.DataFrame)-> pd.DataFrame:
 
 def augment_missing_data(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Augments the data by looking for gaps of over 15 minutes, then inserting past
-    temperatures from 24 hours ago. 
+    Augment missing data using readings from 24 hours previous.
 
     Args:
         df: a dataframe of temperature readings, sorted by timestamp
@@ -49,7 +49,6 @@ def augment_missing_data(df: pd.DataFrame) -> pd.DataFrame:
         df: a dataframe of temperature readings, sorted by timestamp, augmented
         to input missing data with the value from 24 hours previous. 
     """
-
     print(f'Dataframe size before augmentation: {df.shape}')
 
     df_original_shape = df.shape
@@ -78,6 +77,8 @@ def augment_missing_data(df: pd.DataFrame) -> pd.DataFrame:
 
 def train_val_test_split(df: pd.DataFrame)-> pd.DataFrame:
     """
+    Apply train, validation, and test split to time series data.
+    
     Takes a preprocessed dataframe, assumed to be sorted chronologically,
     and returns three dataframes split into train, validation, and test; 
     done chronologically in a 60%/20%/20% split. 
@@ -89,7 +90,6 @@ def train_val_test_split(df: pd.DataFrame)-> pd.DataFrame:
         df_train, df_test, df_val: a tuple of the train, test, and validation 
         data.
     """
-
     train_index = int(np.round(df.shape[0]*0.6))
     val_index = int(np.round(df.shape[0]*0.8))
 
@@ -99,11 +99,18 @@ def train_val_test_split(df: pd.DataFrame)-> pd.DataFrame:
 
     return df_train, df_test, df_val
 
-def scale_data(df_train, df_val, df_test):
-    """Scales data and saves scaling object as a pickle file. 
+def scale_data(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame
+               ) -> Tuple(pd.DataFrame, pd.DataFrame, pd.DataFrame):
+    """Scales data and saves scaling object as a pickle file.
     
-    """
+    Args:
+        df_train, df_val, df_test: train, val, and test splits of time series 
+        data
 
+    Returns:
+        df_train_scaled, df_val_scaled, df_test_scaled: scaled train, val, and 
+        test splits of time series data, using StandardScaler.
+    """
     scaler = StandardScaler()
     print(scaler.fit(df_train))
     print(scaler.mean_)
@@ -115,14 +122,14 @@ def scale_data(df_train, df_val, df_test):
 
 def generate_sequences(df_train, df_val, df_test):
     """
-    Creating the generators. The task will be to take in one hour of readings, 
+    Create the sequence and target generators for use in model training and evaluation.
+    
+    The task will be to take in one hour of readings, 
     spaced 10 minutes apart, and predict the temperature in two hours. 
     
     For example, there will be readings at 3:00pm, 3:10pm, ..., 4:00pm, 
     and the task will be to predict the temperature at 6pm. 
-
     """
-
     delay = 24
     sequence_length = 12
 
@@ -142,7 +149,7 @@ def generate_sequences(df_train, df_val, df_test):
 
 def run_preprocessing_pipeline(csv_input_path: str)-> list:
     """
-    Run pipeline from CSV to generators ready for input to training. 
+    Run pipeline from CSV to generators ready for input to training.
 
     Args:
         csv_input_path: a string of the path to the location of the CSV
@@ -152,11 +159,10 @@ def run_preprocessing_pipeline(csv_input_path: str)-> list:
         which load 12 inputs and 1 target, from a scaled dataset of temperature 
         readings. 
     """
-
     df_raw = pd.read_csv(csv_input_path)
 
-    df_preprocessed = preprocess_data(df_raw)
-    df_augmented = augment_missing_data(df_preprocessed)
+    df_cleaned = clean_data(df_raw)
+    df_augmented = augment_missing_data(df_cleaned)
     df_train, df_val, df_test = train_val_test_split(df_augmented)
     df_train, df_val, df_test = scale_data(df_train, df_val, df_test)
 

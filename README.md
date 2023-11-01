@@ -19,3 +19,8 @@ To do:
 * Makefile used for automating tests, formatting, and resolving dependencies
 * Githooks (https://pre-commit.com/) used to resolve small code issues
 * TODO : Use poetry for environment management
+
+# Ideas
+
+* How to run this retraining? Could run it on the Pi, then generate the saved model. Maybe another time could learn how to do this with AWS.
+* How to get the saved model to the new repo? One option could be to run a bash script to copy the model into the flask-website repo, then run an automated commit - which should trigger the codebuild process!
