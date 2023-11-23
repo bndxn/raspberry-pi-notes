@@ -3,7 +3,6 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 from datetime import timedelta
-import plotly.express as px
 from pickle import dump
 from sklearn.preprocessing import StandardScaler
 from tensorflow import keras
@@ -18,8 +17,10 @@ def clean_data(df: pd.DataFrame)-> pd.DataFrame:
     Returns: 
         df: a dataframe of temperature readings, sorted by timestamp
     """
-    df.rename(columns={'humidity.S': 'humidity',
-                   'temperature.S':'temperature',
+    
+    df.drop(columns=['Unnamed: 0', 'humidity.S'],inplace=True)
+
+    df.rename(columns={'temperature.S':'temperature',
                    'timestamp.S':'timestamp'},inplace=True)
     
     # Convert the timestamp column to datetime format
@@ -29,7 +30,6 @@ def clean_data(df: pd.DataFrame)-> pd.DataFrame:
     df['timestamp'] = df['timestamp'].dt.round('1min')
 
     # Remove unnecessary columns
-    df.drop(columns=['Unnamed: 0', 'humidity'],inplace=True)
     df.sort_values(by='timestamp')
     df = df[ df['timestamp'] > '2023-04-28' ]
     df.set_index('timestamp', inplace=True)
