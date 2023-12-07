@@ -17,7 +17,6 @@ def clean_data(df: pd.DataFrame)-> pd.DataFrame:
     Returns: 
         df: a dataframe of temperature readings, sorted by timestamp
     """
-    
     df.drop(columns=['Unnamed: 0', 'humidity.S'],inplace=True)
 
     df.rename(columns={'temperature.S':'temperature',
@@ -75,7 +74,7 @@ def augment_missing_data(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def train_val_test_split(df: pd.DataFrame)-> pd.DataFrame:
+def train_val_test_split(df: pd.DataFrame)-> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Apply train, validation, and test split to time series data.
     
@@ -100,7 +99,7 @@ def train_val_test_split(df: pd.DataFrame)-> pd.DataFrame:
     return df_train, df_test, df_val
 
 def scale_data(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame
-               ) -> (pd.DataFrame, pd.DataFrame, pd.DataFrame):
+               ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Scales data and saves scaling object as a pickle file.
     
     Args:
@@ -120,7 +119,7 @@ def scale_data(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFra
 
     return scaler.transform(df_train), scaler.transform(df_val), scaler.transform(df_test)
 
-def generate_sequences(df_train, df_val, df_test):
+def generate_sequences(df_train, df_val, df_test) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Create the sequence and target generators for use in model training and evaluation.
     
@@ -147,7 +146,7 @@ def generate_sequences(df_train, df_val, df_test):
     
     return train, validation, test
 
-def run_preprocessing_pipeline(csv_input_path: str)-> list:
+def run_preprocessing_pipeline(csv_input_path: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Run pipeline from CSV to generators ready for input to training.
 
