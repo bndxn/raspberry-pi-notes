@@ -100,7 +100,7 @@ def train_val_test_split(df: pd.DataFrame)-> pd.DataFrame:
     return df_train, df_test, df_val
 
 def scale_data(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame
-               ) -> Tuple(pd.DataFrame, pd.DataFrame, pd.DataFrame):
+               ) -> (pd.DataFrame, pd.DataFrame, pd.DataFrame):
     """Scales data and saves scaling object as a pickle file.
     
     Args:
