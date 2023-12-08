@@ -63,7 +63,7 @@ def augment_missing_data(df: pd.DataFrame) -> pd.DataFrame:
         current_time = pd.Timestamp(df.index[i])
         next_time = pd.Timestamp(df.index[i + 1])
 
-        if (next_time - current_time) > time_interval + timedelta(minutes=15):
+        if (next_time - current_time) > time_interval + timedelta(minutes=60):
 
             previous_value_temp = df.iloc[i + 1 - one_day]["temperature"]
             new_row = pd.DataFrame(
