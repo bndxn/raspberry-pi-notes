@@ -16,7 +16,6 @@ This repo contains the code for parts 1,2,3. Part 4 is stored in a different rep
 * Testing is now done Pytest
 * Makefile used for automating tests, formatting, and resolving dependencies
 * Githooks (https://pre-commit.com/) used to resolve small code issues
-* TODO : Use poetry for environment management
 
 # Ideas
 
