@@ -4,16 +4,17 @@ import tensorflow as tf
 from tensorflow import keras
 from keras import layers
 
-def train_model(train, validation)-> keras.Model:
+
+def train_model(train, validation) -> keras.Model:
     """Given training and validation data, train a keras LSTM model.
 
     Args:
-        train: a shuffled generator of a time series, with 12 inputs and 
+        train: a shuffled generator of a time series, with 12 inputs and
         one target, one hours later, for the train dataset
-        validation: a shuffled generator of a time series, with 12 inputs and 
+        validation: a shuffled generator of a time series, with 12 inputs and
         one target, one hours later, for the validation dataset
 
-    Returns: 
+    Returns:
         model: a trained LSTM model
     """
     inputs = keras.Input(shape=(12, 1))
@@ -24,27 +25,28 @@ def train_model(train, validation)-> keras.Model:
     model = keras.Model(inputs, outputs)
 
     model.compile(optimizer="adam", loss="mse", metrics=["mae"])
-    history = model.fit(train,
-                        epochs=30,
-                        validation_data=validation)
-    
-    return model 
+    history = model.fit(train, epochs=30, validation_data=validation)
+
+    return model
+
 
 def compress_model(model: keras.Model) -> None:
     """Compresses the LSTM model into the TF-Lite format.
 
-    Saves the model to disk. 
+    Saves the model to disk.
 
     Args:
         model: the trained keras LSTM model
 
     Returns:
-        None: the function saved the compressed file to disk. 
+        None: the function saved the compressed file to disk.
     """
-    converter = tf.lite.TFLiteConverter.from_saved_model('./saved_models/regularised_lstm_saved_model_format/')
+    converter = tf.lite.TFLiteConverter.from_saved_model(
+        "./saved_models/regularised_lstm_saved_model_format/"
+    )
     converter.target_spec.supported_ops = [
-    tf.lite.OpsSet.TFLITE_BUILTINS, # enable TensorFlow Lite ops.
-    tf.lite.OpsSet.SELECT_TF_OPS # enable TensorFlow ops.
+        tf.lite.OpsSet.TFLITE_BUILTINS,  # enable TensorFlow Lite ops.
+        tf.lite.OpsSet.SELECT_TF_OPS,  # enable TensorFlow ops.
     ]
     tflite_model = converter.convert()
     open("saved_models/converted_model.tflite", "wb").write(tflite_model)

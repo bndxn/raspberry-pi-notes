@@ -3,4 +3,4 @@ test:
 
 format:
 	pydocstyle src
-	mypy .
+	mypy --ignore-missing-imports src
