@@ -14,6 +14,7 @@ tensorflow = "2.14.0"
 scikit-learn = "^1.3.2"
 pydocstyle = "^6.3.0"
 pre-commit = "^3.5.0"
+boto3 = "^1.34.11"
 
 
 [build-system]

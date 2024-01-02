@@ -26,7 +26,8 @@ def train_model(train, validation) -> keras.Model:
     model = keras.Model(inputs, outputs)
 
     model.compile(optimizer="adam", loss="mse", metrics=["mae"])
-    model.fit(train, epochs=10, validation_data=validation)
+    model.fit(train, epochs=30, validation_data=validation)
+    model.save("saved_files/regularised_lstm", save_format="tf")
 
     return model
 
@@ -44,7 +45,7 @@ def compress_model(model: keras.Model) -> None:
     """
 
     converter = tf.lite.TFLiteConverter.from_saved_model(
-        "./saved_files/regularised_lstm_saved_model_format/"
+        "./saved_files/regularised_lstm/"
     )
     converter.target_spec.supported_ops = [
         tf.lite.OpsSet.TFLITE_BUILTINS,  # enable TensorFlow Lite ops.

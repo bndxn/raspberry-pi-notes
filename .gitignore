@@ -140,8 +140,8 @@ dmypy.json
 # Output used deployment
 output.zip
 
-# venv
-app_env/*
 
 # tuning models
 analysis/tuning_outputs
+
+.vscode/
