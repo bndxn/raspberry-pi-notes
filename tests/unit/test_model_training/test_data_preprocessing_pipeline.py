@@ -34,3 +34,27 @@ def test_clean_data(example_ddb_data):
 
     assert df_cleaned.index.values[2] == pd.Timestamp("2023-05-06 23:40:00")
     assert df_cleaned["temperature"].iloc[2] == "20.16"
+
+
+@pytest.fixture
+def example_dataframe():
+
+    data = {"temperature": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+    return pd.DataFrame(data)
+
+
+def test_train_val_test_split(example_dataframe):
+    """Checks that train,test,split is in the correct proportion."""
+
+    df_train, df_test, df_val = data_preprocessing_pipeline.train_val_test_split(
+        example_dataframe
+    )
+
+    assert df_train["temperature"].iloc[0] == example_dataframe["temperature"].iloc[0]
+    assert df_train["temperature"].iloc[-1] == example_dataframe["temperature"].iloc[5]
+
+    assert df_val["temperature"].iloc[0] == example_dataframe["temperature"].iloc[6]
+    assert df_val["temperature"].iloc[-1] == example_dataframe["temperature"].iloc[7]
+
+    assert df_test["temperature"].iloc[0] == example_dataframe["temperature"].iloc[8]
+    assert df_test["temperature"].iloc[-1] == example_dataframe["temperature"].iloc[-1]

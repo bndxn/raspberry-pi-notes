@@ -63,7 +63,7 @@ def augment_missing_data(df: pd.DataFrame) -> pd.DataFrame:
         current_time = pd.Timestamp(df.index[i])
         next_time = pd.Timestamp(df.index[i + 1])
 
-        if (next_time - current_time) > time_interval + timedelta(minutes=15):
+        if (next_time - current_time) > time_interval + timedelta(minutes=60):
 
             previous_value_temp = df.iloc[i + 1 - one_day]["temperature"]
             new_row = pd.DataFrame(
@@ -113,7 +113,10 @@ def train_val_test_split(
 
 
 def scale_data(
-    df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame
+    df_train: pd.DataFrame,
+    df_val: pd.DataFrame,
+    df_test: pd.DataFrame,
+    scaler_path: str,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Scales data and saves scaling object as a pickle file.
 
@@ -130,7 +133,7 @@ def scale_data(
     print(scaler.mean_)
     print(scaler.scale_)
 
-    dump(scaler, open("scaler.pkl", "wb"))
+    dump(scaler, open(f"{scaler_path}/scaler.pkl", "wb"))
 
     return (
         scaler.transform(df_train),
@@ -153,12 +156,13 @@ def generate_sequences(
     """
     delay = 24
     sequence_length = 12
+    batch_size = 128
 
     train = keras.preprocessing.timeseries_dataset_from_array(
         df_train[:-delay],
         df_train[sequence_length + delay :],
         sequence_length=sequence_length,
-        batch_size=1,
+        batch_size=batch_size,
         shuffle=True,
     )
 
@@ -166,7 +170,7 @@ def generate_sequences(
         df_val[:-delay],
         df_val[sequence_length + delay :],
         sequence_length=sequence_length,
-        batch_size=1,
+        batch_size=batch_size,
         shuffle=True,
     )
 
@@ -174,7 +178,7 @@ def generate_sequences(
         df_test[:-delay],
         df_test[sequence_length + delay :],
         sequence_length=sequence_length,
-        batch_size=1,
+        batch_size=batch_size,
         shuffle=True,
     )
 
@@ -200,9 +204,12 @@ def run_preprocessing_pipeline(
     df_cleaned = clean_data(df_raw)
     df_augmented = augment_missing_data(df_cleaned)
     df_train, df_val, df_test = train_val_test_split(df_augmented)
-    df_train, df_val, df_test = scale_data(df_train, df_val, df_test)
+    df_train, df_val, df_test = scale_data(
+        df_train, df_val, df_test, scaler_path="saved_files"
+    )
 
     return generate_sequences(df_train, df_val, df_test)
 
 
-train, validation, test = run_preprocessing_pipeline("analysis/ddb_output.csv")
+if __name__ == "__main__":
+    train, validation, test = run_preprocessing_pipeline("analysis/ddb_output.csv")
