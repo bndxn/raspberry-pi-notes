@@ -156,12 +156,13 @@ def generate_sequences(
     """
     delay = 24
     sequence_length = 12
+    batch_size = 128
 
     train = keras.preprocessing.timeseries_dataset_from_array(
         df_train[:-delay],
         df_train[sequence_length + delay :],
         sequence_length=sequence_length,
-        batch_size=1,
+        batch_size=batch_size,
         shuffle=True,
     )
 
@@ -169,7 +170,7 @@ def generate_sequences(
         df_val[:-delay],
         df_val[sequence_length + delay :],
         sequence_length=sequence_length,
-        batch_size=1,
+        batch_size=batch_size,
         shuffle=True,
     )
 
@@ -177,7 +178,7 @@ def generate_sequences(
         df_test[:-delay],
         df_test[sequence_length + delay :],
         sequence_length=sequence_length,
-        batch_size=1,
+        batch_size=batch_size,
         shuffle=True,
     )
 

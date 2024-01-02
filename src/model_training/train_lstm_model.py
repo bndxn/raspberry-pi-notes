@@ -1,4 +1,5 @@
 """Defines training process for LSTM time-series model."""
+import logging
 
 import tensorflow as tf
 from tensorflow import keras
@@ -25,7 +26,7 @@ def train_model(train, validation) -> keras.Model:
     model = keras.Model(inputs, outputs)
 
     model.compile(optimizer="adam", loss="mse", metrics=["mae"])
-    history = model.fit(train, epochs=30, validation_data=validation)
+    model.fit(train, epochs=10, validation_data=validation)
 
     return model
 
@@ -41,12 +42,13 @@ def compress_model(model: keras.Model) -> None:
     Returns:
         None: the function saved the compressed file to disk.
     """
+
     converter = tf.lite.TFLiteConverter.from_saved_model(
-        "./saved_models/regularised_lstm_saved_model_format/"
+        "./saved_files/regularised_lstm_saved_model_format/"
     )
     converter.target_spec.supported_ops = [
         tf.lite.OpsSet.TFLITE_BUILTINS,  # enable TensorFlow Lite ops.
         tf.lite.OpsSet.SELECT_TF_OPS,  # enable TensorFlow ops.
     ]
     tflite_model = converter.convert()
-    open("saved_models/converted_model.tflite", "wb").write(tflite_model)
+    open("saved_files/converted_model.tflite", "wb").write(tflite_model)
