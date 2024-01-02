@@ -1,7 +1,11 @@
 """Controller function for training model."""
 from utils.ddb_query import DynamoResource
 from model_training.data_preprocessing_pipeline import run_preprocessing_pipeline
-from model_training.train_lstm_model import train_model, compress_model
+from model_training.train_lstm_model import (
+    train_model,
+    compress_model,
+    persistence_forecast,
+)
 
 
 def run_training_pipeline():
@@ -10,6 +14,7 @@ def run_training_pipeline():
     dynamoresource.query_all_time()
     train, validation, _ = run_preprocessing_pipeline("saved_files/ddb_output.csv")
     model = train_model(train, validation)
+    persistence_forecast(validation, batch_size=128)
     compress_model(model)
 
 

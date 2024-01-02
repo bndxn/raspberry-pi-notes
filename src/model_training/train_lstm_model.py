@@ -4,6 +4,12 @@ import logging
 import tensorflow as tf
 from tensorflow import keras
 from keras import layers
+import numpy as np
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s"
+)
+logger = logging.getLogger()
 
 
 def train_model(train, validation) -> keras.Model:
@@ -26,10 +32,29 @@ def train_model(train, validation) -> keras.Model:
     model = keras.Model(inputs, outputs)
 
     model.compile(optimizer="adam", loss="mse", metrics=["mae"])
-    model.fit(train, epochs=30, validation_data=validation)
+    model.fit(train, epochs=5, validation_data=validation)
+    evaluation = model.evaluate(validation)
+    logger.info(f"Model evaluation, loss: {evaluation[0]}, mae: {evaluation[1]}")
     model.save("saved_files/regularised_lstm", save_format="tf")
 
     return model
+
+
+def persistence_forecast(dataset, batch_size):
+
+    total_abs_err = 0
+    predictions = 0
+
+    for inputs, targets in dataset:
+
+        # We take the last value from the input tensor
+        preds = inputs[:, -1]
+        total_abs_err += np.sum(np.abs(preds - targets))
+        predictions += 1
+
+    logger.info(
+        f"Baseline: persistence forecast for 2 hours - MAE: {total_abs_err / (predictions*batch_size)}%"
+    )
 
 
 def compress_model(model: keras.Model) -> None:
