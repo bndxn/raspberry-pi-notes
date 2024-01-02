@@ -1,4 +1,5 @@
 """Defines data preprocessing from DDB query result, prepares for input to model."""
+import logging
 from typing import Tuple
 import numpy as np
 import pandas as pd
@@ -7,10 +8,18 @@ from pickle import dump
 from sklearn.preprocessing import StandardScaler
 from tensorflow import keras
 
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s"
+)
+logger = logging.getLogger()
+
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Apply basic data cleaning and reorganisation.
+    Apply basic data cleaning and reorganisation. Unused columns are dropped,
+    then the timestamp recorded is rounded to the nearest minute. The values are
+    then sorted by timestamp, only those after a certain date when the readings were
+    more consistent are used, and then the index is set.
 
     Args:
         df: a dataframe of readings, including temperature and humidity.
@@ -25,18 +34,14 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
         inplace=True,
     )
 
-    # Convert the timestamp column to datetime format
     df["timestamp"] = pd.to_datetime(df["timestamp"], format="mixed")
-
-    # Round the timestamp to the nearest minute
     df["timestamp"] = df["timestamp"].dt.round("1min")
-
-    # Remove unnecessary columns
     df.sort_values(by="timestamp")
-    df = df[df["timestamp"] > "2023-04-28"]
+    df = df[df["timestamp"] > "2023-05-28"]
     df.set_index("timestamp", inplace=True)
-    df.dropna(inplace=True)
+    df = df.dropna()
 
+    logger.info("DynamoDB readings formatted")
     return pd.DataFrame(df)
 
 
@@ -51,7 +56,7 @@ def augment_missing_data(df: pd.DataFrame) -> pd.DataFrame:
         df: a dataframe of temperature readings, sorted by timestamp, augmented
         to input missing data with the value from 24 hours previous.
     """
-    print(f"Dataframe size before augmentation: {df.shape}")
+    logger.info(f"Dataframe size before augmentation: {df.shape}")
 
     df_original_shape = df.shape
     one_day = 10 * 24
@@ -74,8 +79,9 @@ def augment_missing_data(df: pd.DataFrame) -> pd.DataFrame:
 
         i += 1
 
-    print(f"Dataframe size after empty rows added: {df.shape}")
-    print(
+    logger.info("Missing data augmented")
+    logger.info(f"Dataframe size after empty rows added: {df.shape}")
+    logger.info(
         f"Rows added, {df.shape[0]-df_original_shape[0]},"
         f"or {np.round((df.shape[0]-df_original_shape[0])*100/df.shape[0],2)}% of the new total."
     )
@@ -109,6 +115,11 @@ def train_val_test_split(
     df_val = df.iloc[train_index:val_index]
     df_test = df.iloc[val_index:]
 
+    logger.info("Train, test, validation split complete.")
+    logger.info(
+        f"Train index: {train_index}, val_index: {val_index}, end : {df.shape[0]}"
+    )
+
     return df_train, df_test, df_val
 
 
@@ -128,10 +139,11 @@ def scale_data(
         df_train_scaled, df_val_scaled, df_test_scaled: scaled train, val, and
         test splits of time series data, using StandardScaler.
     """
+    logger.info("Fitting scaler")
     scaler = StandardScaler()
-    print(scaler.fit(df_train))
-    print(scaler.mean_)
-    print(scaler.scale_)
+    scaler.fit(df_train)
+    logger.info("Scaler fitted")
+    logger.info(f"Scaler mean: {scaler.mean_}, scaler scale: {scaler.scale_}")
 
     dump(scaler, open(f"{scaler_path}/scaler.pkl", "wb"))
 
@@ -181,6 +193,7 @@ def generate_sequences(
         batch_size=batch_size,
         shuffle=True,
     )
+    logger.info("Sequences generators created.")
 
     return train, validation, test
 
@@ -212,4 +225,4 @@ def run_preprocessing_pipeline(
 
 
 if __name__ == "__main__":
-    train, validation, test = run_preprocessing_pipeline("analysis/ddb_output.csv")
+    train, validation, test = run_preprocessing_pipeline("saved_files/ddb_output.csv")
