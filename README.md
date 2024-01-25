@@ -13,23 +13,6 @@ This repo contains the code for parts 1,2,3. Part 4 is stored in a different rep
 # Engineering additions
 
 * CodePipeline is used on the flask-website repo to automatically update the image based on Github commits.
-* Testing is now done Pytest
+* Testing is now done using pytest
 * Makefile used for automating tests, formatting, and resolving dependencies
 * Githooks (https://pre-commit.com/) used to resolve small code issues
-
-# Ideas
-
-* How to run this retraining? Could run it on the Pi, then generate the saved model. Maybe another time could learn how to do this with AWS.
-* How to get the saved model to the new repo? One option could be to run a bash script to copy the model into the flask-website repo, then run an automated commit - which should trigger the codebuild process!
-
-# Formatting
-
-The Makefile checks that the format is valid.
-
-
-# Testing
-
-
-# Logging
-
-To do
