@@ -26,7 +26,7 @@ def train_model(train, validation) -> keras.Model:
     model = keras.Model(inputs, outputs)
 
     model.compile(optimizer="adam", loss="mse", metrics=["mae"])
-    model.fit(train, epochs=10, validation_data=validation)
+    model.fit(train, epochs=20, validation_data=validation)
 
     return model
 
@@ -42,7 +42,7 @@ def compress_model(model: keras.Model) -> None:
     Returns:
         None: the function saved the compressed file to disk.
     """
-
+    # this currently just loads the existing model, change this to include the newly trained one
     converter = tf.lite.TFLiteConverter.from_saved_model(
         "./saved_files/regularised_lstm_saved_model_format/"
     )
