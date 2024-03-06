@@ -10,12 +10,16 @@ The end-to-end process is as follows:
 
 This repo contains the code for parts 1 and 2. Parts 3 and 4 is stored in a different repo to separate the front-end from the training process, and to allow the web application to run on a smaller instance that does not also need to perform model training.
 
-## Engineering additions
-A few things I've added:
-* CodePipeline is used on the flask-website repo to automatically update the image based on Github commits.
-* Testing is now done using pytest
-* Makefile used for automating tests, formatting, and resolving dependencies
-* [Githooks](https://pre-commit.com/) used to resolve small code issues
+# Developers
 
-## To do
-* Automate model retraining, maybe using Sagemaker, or possibly just set up a bash script to retrain/move/commit the other model, or find some better way of doing this 
+Run `poetry run python src/main.py`
+
+Testing: `poetry run pytest` (only a few added so far)
+
+## Serverless deployment
+* Currently exploring setting up a serverless endpoint, following [this notebook](https://github.com/aws/amazon-sagemaker-examples/blob/main/serverless-inference/Serverless-Inference-Walkthrough.ipynb), but unclear whether this is possible for already existing pretrained models. So far the endpoint has not accepted the pretrained LSTM. 
+
+**Next steps**
+* Set up Dockerfile or S3 to automate model retraining and save model, scaler, and training data to S3
+* Continue exploring serverless endpoint, if this cannot be done for tensorflow then try an AWS Lambda
+
